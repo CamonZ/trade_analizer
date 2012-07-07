@@ -18,6 +18,8 @@ end
 
 gem 'jquery-rails'
 
+gem 'haml-rails', '>= 0.3.4', :group => :development
+
 gem "rspec", :group => [:development, :test]
 gem "rspec-rails", ">= 2.10.1", :group => [:development, :test]
 gem "remarkable", "~> 4.0.0.alpha4", :group =>[:development, :test]
