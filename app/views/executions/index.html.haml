@@ -1,2 +1,7 @@
 .main
   Please upload your trade executions file
+  = form_for(@executions_file, :url => upload_executions_path, :html => {:multipart => true}) do |f|
+    = f.file_field :file
+    %br
+    = f.submit
+    

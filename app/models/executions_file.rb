@@ -1,3 +1,7 @@
 class ExecutionsFile < ActiveRecord::Base
-  mount_uploader :file, ExecutionsFileUploader
+  def parse; end
+  
+  private
+  
+  def check_required_columns; end
 end

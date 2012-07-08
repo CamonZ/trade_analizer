@@ -58,7 +58,7 @@ TradeAnalizer::Application.routes.draw do
   
   resources :executions do
     collection do
-      get 'upload'
+      post 'upload'
     end
   end
   root :to => 'executions#index'
