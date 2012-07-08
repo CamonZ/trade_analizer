@@ -18,11 +18,29 @@ $title-color: #494949;
       color: $title-color;
     }
   }
-  nav { @include span-columns(3, 12); }
+  .clear { @include reset-columns}
+  nav { 
+    @include span-columns(3, 12);
+    ul{
+      list-style: none; 
+      padding: 0;
+      margin: 0;
+      li{ 
+        list-style: none; 
+        float: right;
+        margin-left: 10px;
+      }
+    }
+    
+  }
   
   .content {
     @include span-columns(12, 12);
-    .main {@include span-columns(6, 9); }
+    .main {
+      @include span-columns(6, 9);
+      padding-top: 10px; 
+      font-size: 1em;
+    }
     .secondary{ @include span-columns(3 omega, 9); }
   }
   
