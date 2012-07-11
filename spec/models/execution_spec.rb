@@ -24,4 +24,6 @@ describe Execution do
   should_validate_presence_of :contra
   should_validate_presence_of :liquidity
   should_validate_presence_of :profit_and_loss
+  
+  should_belong_to :executions_file
 end
