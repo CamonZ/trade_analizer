@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120711035445) do
+ActiveRecord::Schema.define(:version => 20120714185813) do
 
   create_table "executions", :force => true do |t|
     t.date     "date"
@@ -22,9 +22,9 @@ ActiveRecord::Schema.define(:version => 20120711035445) do
     t.string   "side"
     t.string   "contra"
     t.integer  "liquidity"
-    t.float    "profit_and_loss"
-    t.datetime "created_at",         :null => false
-    t.datetime "updated_at",         :null => false
+    t.float    "profit_and_loss",    :default => 0.0
+    t.datetime "created_at",                          :null => false
+    t.datetime "updated_at",                          :null => false
     t.integer  "executions_file_id"
   end
 
