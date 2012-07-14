@@ -20,6 +20,9 @@ class ExecutionsFile < ActiveRecord::Base
 
     file.rewind
     field_names = file.readline.scan(/([[:print:]]+)\t?/).flatten
+    
+    execs = []
+    
     file.each_line do |l|
       fields = l.scan(/([[:print:]]+)\t?/).flatten
       
@@ -28,32 +31,29 @@ class ExecutionsFile < ActiveRecord::Base
       field_names.each do |fn|
         case fn
         when fn == "Exec Time"
-          execution_fields[@@fields_to_sym[fn]] = DateTime.parse(date.to_s + " " + fields.shift)
+          execution_fields[@@fields_to_sym[fn]] = parse_datetime(date, fields)
           break;
         when fn == "Symbol" || fn == "Side" || fn == "Contra"
-          execution_fields[@@fields_to_sym[fn]] = fields.shift.lstrip
+          execution_fields[@@fields_to_sym[fn]] = parse_string(fields)
           break;
         when fn == "Executed Shares"
-          execution_fields[@@fields_to_sym[fn]] = fields.shift.to_i
+          execution_fields[@@fields_to_sym[fn]] = parse_shares(fields)
           break;
         when fn == "Price" || fn == "P&L"
-          execution_fields[@@fields_to_sym[fn]] = fields.shift.to_f
+          execution_fields[@@fields_to_sym[fn]] = parse_float(fields)
           break;
         when fn == "Liquidity"
-          liq_field = fields.shift.scan(/(\d+)\/(\d+)/).flatten
-          if liq_field[0].to_i < liq_field[1].to_i 
-            execution_fields[@@fields_to_sym[fn]] = -liq_field[1].to_i
-          else 
-            execution_fields[@@fields_to_sym[fn]] = liq_field[1].to_i
-          end
+          execution_fields[@@fields_to_sym[fn]] = parse_liquidity(f)
           break;
         end
         
-        execution = Execution.new(execution_fields)
-        
       end
+      execs << execution_fields
     end
     
+    create_executions(execs)
+    
+    self.save
   end
   
   private
@@ -68,5 +68,39 @@ class ExecutionsFile < ActiveRecord::Base
   def get_date_from_filename(filename)
     /(\d+-\d+-\d+)\..+$/.match(str)
     Date.parse($1)
+  end
+  
+  def parse_datetime(date, f)
+    DateTime.parse(date.to_s + " " + f.shift)
+  end
+  
+  def parse_string(f)
+    f.shift.strip
+  end
+  
+  def parse_shares(f)
+    f.shift.to_i
+  end
+  
+  def parse_float(f)
+    f.shift.to_f
+  end
+  
+  def parse_liquidity(f)
+    liq_field = f.shift.scan(/(\d+)\/(\d+)/).flatten
+    liq_field = liq_field[0].to_i < liq_field[1].to_i ? -liq_field[1].to_i : liq_field[1].to_i
+    liq_field
+  end
+  
+  def create_executions(execs)
+    execs.each do |e|
+      create_execution_from_hash(e) if e[:shares] > 0
+    end
+  end
+  
+  def create_execution_from_hash(values)
+    values[:profit_and_loss] = 0.0 unless values.has_key?(:profit_and_loss)
+    @exec = Execution.new(values)
+    self.executions << @exec
   end
 end

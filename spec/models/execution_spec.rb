@@ -23,7 +23,8 @@ describe Execution do
   should_validate_presence_of :side
   should_validate_presence_of :contra
   should_validate_presence_of :liquidity
-  should_validate_presence_of :profit_and_loss
+  
+  should_validate_numericality_of :shares, :only_integer => true, :greater_than => 0
   
   should_belong_to :executions_file
 end
