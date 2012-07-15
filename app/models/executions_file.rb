@@ -2,6 +2,8 @@ require 'fileutils'
 class ExecutionsFile < ActiveRecord::Base
   has_many :executions
   
+  validates_presence_of :date
+  
   @@fields_to_sym = {
     "Exec Time" => :time, 
     "Symbol" => :symbol, 
@@ -13,12 +15,27 @@ class ExecutionsFile < ActiveRecord::Base
     "P&L" => :profit_and_loss
   }
   
+  @@fieldnames_to_methods = {
+    "Exec Time" => "datetime",
+    "Symbol" => "string",
+    "Side" => "string",
+    "Contra" => "string",
+    "Executed Shares" => "shares",
+    "Price" => "float",
+    "P&L" => "float",
+    "Liquidity" => "liquidity"
+  }
+  
   def parse(file, filename)
-    date = get_date_from_filename(filename)
+    self.date = get_date_from_filename(filename)
 
-    return has_required_columns?(file.readline)
+    
+    if !has_required_columns?(file.readline)
+      return false;
+    end
 
     file.rewind
+    
     field_names = file.readline.scan(/([[:print:]]+)\t?/).flatten
     
     execs = []
@@ -29,31 +46,16 @@ class ExecutionsFile < ActiveRecord::Base
       execution_fields = {}
       
       field_names.each do |fn|
-        case fn
-        when fn == "Exec Time"
-          execution_fields[@@fields_to_sym[fn]] = parse_datetime(date, fields)
-          break;
-        when fn == "Symbol" || fn == "Side" || fn == "Contra"
-          execution_fields[@@fields_to_sym[fn]] = parse_string(fields)
-          break;
-        when fn == "Executed Shares"
-          execution_fields[@@fields_to_sym[fn]] = parse_shares(fields)
-          break;
-        when fn == "Price" || fn == "P&L"
-          execution_fields[@@fields_to_sym[fn]] = parse_float(fields)
-          break;
-        when fn == "Liquidity"
-          execution_fields[@@fields_to_sym[fn]] = parse_liquidity(f)
-          break;
-        end
-        
+        execution_fields[:date] = self.date
+        execution_fields[@@fields_to_sym[fn]] = self.send(("parse_" + @@fieldnames_to_methods[fn]).to_sym, fields)
       end
+
       execs << execution_fields
     end
     
     create_executions(execs)
     
-    self.save
+    save
   end
   
   private
@@ -66,12 +68,12 @@ class ExecutionsFile < ActiveRecord::Base
   end
   
   def get_date_from_filename(filename)
-    /(\d+-\d+-\d+)\..+$/.match(str)
+    /(\d+-\d+-\d+)\..+$/.match(filename)
     Date.parse($1)
   end
   
-  def parse_datetime(date, f)
-    DateTime.parse(date.to_s + " " + f.shift)
+  def parse_datetime(f)
+    DateTime.parse(self.date.to_s + " " + f.shift)
   end
   
   def parse_string(f)

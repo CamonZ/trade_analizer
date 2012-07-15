@@ -4,6 +4,9 @@ require 'fileutils'
 describe ExecutionsFile do
   should_respond_to :parse
   should_have_many :executions
+  
+  should_validate_presence_of :date
+  
   describe "When parsing the executions file" do
     before do
       @executions_file = ExecutionsFile.new

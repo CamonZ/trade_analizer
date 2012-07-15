@@ -4,13 +4,13 @@
     = form_for(@ef, :url => upload_executions_path, :html => {:multipart => true}) do |f|
       = f.file_field :file
       %br
-      = f.submit
+      = f.submit "Upload Executions"
   .executions
     %h2 Your Past Executions
     - @executions.each do |e|
       %ul
         %li
-          = link_to(e.date.to_s, e.id)
+          = link_to(e.date.to_s, "#")
     
   
     

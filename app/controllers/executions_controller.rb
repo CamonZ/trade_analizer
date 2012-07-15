@@ -6,7 +6,11 @@ class ExecutionsController < ApplicationController
   
   def upload
     @executions_file = ExecutionsFile.new
+
+    @executions_file.parse(params[:executions_file][:file].tempfile, params[:executions_file][:file].original_filename)
     
-    result = @executions_file.parse()
+    respond_to do |format|
+      format.html { redirect_to root_path}
+    end
   end
 end
