@@ -1,7 +1,16 @@
 .main
-  Please upload your trade executions file
-  = form_for(@executions_file, :url => upload_executions_path, :html => {:multipart => true}) do |f|
-    = f.file_field :file
-    %br
-    = f.submit
+  #upload
+    Please upload your trade executions file
+    = form_for(@ef, :url => upload_executions_path, :html => {:multipart => true}) do |f|
+      = f.file_field :file
+      %br
+      = f.submit
+  .executions
+    %h2 Your Past Executions
+    - @executions.each do |e|
+      %ul
+        %li
+          = link_to(e.date.to_s, e.id)
+    
+  
     

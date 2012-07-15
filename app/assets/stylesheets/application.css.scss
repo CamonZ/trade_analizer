@@ -6,6 +6,7 @@ $column-width   : 4em;            // each column is 4em wide
 $gutter-width   : 1em;            // 1em gutters between columns
 $grid-padding   : $gutter-width;  // grid-padding equal to gutters
 $title-color: #494949;
+$subtitle-color: #3B3B3B;
 
 .page{
   @include container;
@@ -40,9 +41,15 @@ $title-color: #494949;
       @include span-columns(6, 9);
       padding-top: 10px; 
       font-size: 1em;
+      
+      .executions {padding-top: 15px; }
+      h2 { color: $subtitle-color; }
+      
     }
     input { padding: 10px 0 10px 0;}
     .secondary{ @include span-columns(3 omega, 9); }
+    
+    
   }
   
 }
