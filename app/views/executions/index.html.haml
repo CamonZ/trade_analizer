@@ -10,7 +10,7 @@
     - @executions.each do |e|
       %ul
         %li
-          = link_to(e.date.to_s, "#")
+          = link_to(e.date.to_s, execution_path(e.id))
     
   
     

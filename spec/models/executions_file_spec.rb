@@ -10,6 +10,7 @@ describe ExecutionsFile do
   describe "When parsing the executions file" do
     before do
       @executions_file = ExecutionsFile.new
+      @executions_file.date = Date.parse("2012-07-13")
     end
     
     describe " when parsing the liquidity for the stock" do
@@ -101,7 +102,7 @@ describe ExecutionsFile do
     end
     
     it "should properly parse the execution time and date" do
-      @executions_file.send(:parse_datetime, Date.parse("2012-07-13"), ["09:30:00"]).to_s.should == "2012-07-13T09:30:00+00:00"
+      @executions_file.send(:parse_datetime, ["09:30:00"]).to_s.should == "2012-07-13T09:30:00+00:00"
     end
     
     it "should properly parse the amount of executed shares" do

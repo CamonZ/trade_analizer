@@ -43,6 +43,15 @@ $subtitle-color: #3B3B3B;
       font-size: 1em;
       
       .executions {padding-top: 15px; }
+      table{
+        border: 1px solid #ffffff; 
+        thead{
+          th{
+            padding: 10px;
+          }
+          color: $subtitle-color;
+        }
+      }
       h2 { color: $subtitle-color; }
       
     }

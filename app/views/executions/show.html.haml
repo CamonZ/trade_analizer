@@ -1,0 +1,37 @@
+.main
+  %h2 
+    = "Executions for #{@executions_file.date}"
+  %table
+    %thead
+      %tr
+        %th Time
+        %th Symbol
+        %th Shares
+        %th Price
+        %th Side
+        %th Contra
+        %th Liquidity
+        %th P&L
+      %tr
+    %tbody
+      - @executions_file.executions.each do |e|
+        %tr
+          %td
+            = e.time.strftime("%H:%M:%S")
+          %td
+            = e.symbol.upcase
+          %td
+            = e.shares
+          %td
+            = e.price
+          %td
+            = e.side
+          %td
+            = e.contra
+          %td
+            = e.liquidity
+          %td
+            = e.profit_and_loss 
+    
+  
+    

@@ -4,6 +4,14 @@ class ExecutionsController < ApplicationController
     @executions = ExecutionsFile.all
   end
   
+  def show
+    @executions_file = ExecutionsFile.find(params[:id])
+    
+    respond_to do |format|
+      format.html
+    end
+  end
+  
   def upload
     @executions_file = ExecutionsFile.new
 

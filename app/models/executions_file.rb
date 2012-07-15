@@ -1,6 +1,6 @@
 require 'fileutils'
 class ExecutionsFile < ActiveRecord::Base
-  has_many :executions
+  has_many :executions, :order => :time
   
   validates_presence_of :date
   
@@ -101,7 +101,6 @@ class ExecutionsFile < ActiveRecord::Base
   end
   
   def create_execution_from_hash(values)
-    values[:profit_and_loss] = 0.0 unless values.has_key?(:profit_and_loss)
     @exec = Execution.new(values)
     self.executions << @exec
   end
