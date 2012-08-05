@@ -1,7 +1,7 @@
 .main
   %h2 
     = "Executions for #{@executions_file.date}"
-  %table
+  %table#trade_executions
     %thead
       %tr
         %th Time
@@ -12,10 +12,9 @@
         %th Contra
         %th Liquidity
         %th P&L
-      %tr
     %tbody
       - @executions_file.executions.each do |e|
-        %tr
+        %tr{:class => cycle('odd', 'even')}
           %td
             = e.time.strftime("%H:%M:%S")
           %td
