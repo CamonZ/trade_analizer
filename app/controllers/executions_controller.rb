@@ -1,7 +1,7 @@
 class ExecutionsController < ApplicationController
   def index
     @ef = ExecutionsFile.new
-    @executions = ExecutionsFile.all
+    @executions = ExecutionsFile.order("date DESC")
   end
   
   def show
