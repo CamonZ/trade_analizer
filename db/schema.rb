@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120715025529) do
+ActiveRecord::Schema.define(:version => 20120806233225) do
 
   create_table "executions", :force => true do |t|
     t.date     "date"
@@ -29,9 +29,18 @@ ActiveRecord::Schema.define(:version => 20120715025529) do
   end
 
   create_table "executions_days", :force => true do |t|
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
+    t.datetime "created_at",        :null => false
+    t.datetime "updated_at",        :null => false
     t.date     "date"
+    t.float    "profit_and_loss"
+    t.float    "wins"
+    t.float    "losses"
+    t.float    "wins_average"
+    t.float    "losses_average"
+    t.float    "win_percentage"
+    t.float    "losses_percentage"
+    t.string   "best_stock"
+    t.string   "worst_stock"
   end
 
 end
