@@ -22,13 +22,13 @@ ActiveRecord::Schema.define(:version => 20120715025529) do
     t.string   "side"
     t.string   "contra"
     t.integer  "liquidity"
-    t.float    "profit_and_loss",    :default => 0.0
-    t.datetime "created_at",                          :null => false
-    t.datetime "updated_at",                          :null => false
-    t.integer  "executions_file_id"
+    t.float    "profit_and_loss",   :default => 0.0
+    t.datetime "created_at",                         :null => false
+    t.datetime "updated_at",                         :null => false
+    t.integer  "executions_day_id"
   end
 
-  create_table "executions_files", :force => true do |t|
+  create_table "executions_days", :force => true do |t|
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
     t.date     "date"

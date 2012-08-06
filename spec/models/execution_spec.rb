@@ -26,5 +26,5 @@ describe Execution do
   
   should_validate_numericality_of :shares, :only_integer => true, :greater_than => 0
   
-  should_belong_to :executions_file
+  should_belong_to :executions_day
 end

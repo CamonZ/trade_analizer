@@ -1,11 +1,11 @@
 class ExecutionsController < ApplicationController
   def index
-    @ef = ExecutionsFile.new
-    @executions = ExecutionsFile.order("date DESC")
+    @ef = ExecutionsDay.new
+    @executions = ExecutionsDay.order("date DESC")
   end
   
   def show
-    @executions_file = ExecutionsFile.find(params[:id])
+    @executions_file = ExecutionsDay.find(params[:id])
     
     respond_to do |format|
       format.html
@@ -13,9 +13,9 @@ class ExecutionsController < ApplicationController
   end
   
   def upload
-    @executions_file = ExecutionsFile.new
+    @executions_day = ExecutionsDay.new
 
-    @executions_file.parse(params[:executions_file][:file].tempfile, params[:executions_file][:file].original_filename)
+    @executions_day.parse(params[:executions_day][:file].tempfile, params[:executions_day][:file].original_filename)
     
     respond_to do |format|
       format.html { redirect_to root_path}

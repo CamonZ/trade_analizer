@@ -1,5 +1,5 @@
 require 'fileutils'
-class ExecutionsFile < ActiveRecord::Base
+class ExecutionsDay < ActiveRecord::Base
   has_many :executions, :order => :time
   
   validates_presence_of :date
