@@ -7,4 +7,5 @@ describe StockProfitAndLoss do
   it { should have_field(:symbol).of_type(String) }
   
   it { should be_embedded_in(:executions_day) }
+  it { should have_many(:executions) }
 end

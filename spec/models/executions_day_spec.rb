@@ -169,21 +169,30 @@ describe ExecutionsDay do
         @executions_day.parse(@executions_file, "Orders 2012-07-02.txt")
       end
       
-      it "has one instance per stock each traded" do
+      it "should have one instance per stock each traded" do
         @executions_day.stocks_profit_and_loss.size.should == 4
       end
       
-      it "an instance has the wins for the stock" do
+      it "an instance should have the wins for the stock" do
         @executions_day.stocks_profit_and_loss.where(:symbol => "NKE").first.wins.should == 61.5
       end
       
-      it "an instance has the losses for the stock" do
+      it "an instance should have has the losses for the stock" do
         @executions_day.stocks_profit_and_loss.where(:symbol => "NKE").first.losses.should == -16.66
       end
       
-      it "an instance has the profit_and_loss for the stock" do
+      it "an instance should have the profit_and_loss for the stock" do
         @executions_day.stocks_profit_and_loss.where(:symbol => "NKE").first.profit_and_loss.should == 44.84
       end
+      
+      it "an instance related executions should be accesible from the instance" do
+        @executions_day.stocks_profit_and_loss.where(:symbol => "NKE").first.respond_to?(:executions).should == true
+      end
+      
+      it "an instance should have the right amount of executions" do
+        @executions_day.stocks_profit_and_loss.where(:symbol => "NKE").first.executions.size.should == 28
+      end
+      
     end
     
   end

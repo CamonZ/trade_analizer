@@ -145,6 +145,7 @@ class ExecutionsDay
         stock_pnl.losses += e.profit_and_loss
       end
       stock_pnl.profit_and_loss = stock_pnl.wins + stock_pnl.losses
+      stock_pnl.executions << e
     end
   end
 end

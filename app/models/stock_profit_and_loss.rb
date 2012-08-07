@@ -7,5 +7,7 @@ class StockProfitAndLoss
   field :profit_and_loss, :type => Float, :default => 0.0
   field :symbol, :type => String
   
+  has_many :executions
   embedded_in :executions_day
+  
 end
