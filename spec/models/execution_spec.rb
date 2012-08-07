@@ -2,21 +2,18 @@ require 'spec_helper'
 
 describe Execution do
   subject { FactoryGirl.create(:execution) }
-  describe "database table" do
-    should_have_column( 'date', :type => :date)
-    should_have_column('time', :type => :datetime)
-    should_have_column('symbol', :type => :string)
-    should_have_column('shares', :type => :integer)
-    should_have_column('price', :type => :float)
-    should_have_column('side', :type => :string)
-    should_have_column('contra', :type => :string)
-    should_have_column('liquidity', :type => :integer)
-    should_have_column('profit_and_loss', :type => :float)
-    
-  end
+  it { should have_field(:date).of_type(Date) }
+  it { should have_field(:execution_time).of_type(DateTime) }
+  it { should have_field(:symbol).of_type(String) }
+  it { should have_field(:shares).of_type(Integer) }
+  it { should have_field(:price).of_type(Float) }
+  it { should have_field(:side).of_type(String) }
+  it { should have_field(:contra).of_type(String) }
+  it { should have_field(:liquidity).of_type(Integer) }
+  it { should have_field(:profit_and_loss).of_type(Float) }
   
   should_validate_presence_of :date
-  should_validate_presence_of :time
+  should_validate_presence_of :execution_time
   should_validate_presence_of :symbol
   should_validate_presence_of :shares
   should_validate_presence_of :price
@@ -24,7 +21,7 @@ describe Execution do
   should_validate_presence_of :contra
   should_validate_presence_of :liquidity
   
-  should_validate_numericality_of :shares, :only_integer => true, :greater_than => 0
+  it { should validate_numericality_of(:shares).to_allow(:only_integer => true, :greater_than => 0) }
   
   should_belong_to :executions_day
 end

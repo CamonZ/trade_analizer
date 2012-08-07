@@ -1,12 +1,30 @@
 require 'fileutils'
-class ExecutionsDay < ActiveRecord::Base
-  has_many :executions, :order => :time
+class ExecutionsDay
+  include Mongoid::Document
+  include Mongoid::Timestamps
+  
+  #fields(fold)
+  field :date, :type => Date
+  field :best_stock, :type => String
+  field :worst_stock, :type => String
+  field :profit_and_loss, :type => Float
+  field :wins, :type => Float
+  field :losses, :type => Float
+  field :wins_average, :type => Float
+  field :losses_average, :type => Float
+  field :wins_percentage, :type => Float
+  field :losses_percentage, :type => Float
+  #(end)
+  
+  scope :by_date, order_by(:date => :desc)
+  
+  has_many :executions
   before_save :calculate_statistics
   
   validates_presence_of :date
   
   @@fields_to_sym = {
-    "Exec Time" => :time, 
+    "Exec Time" => :execution_time, 
     "Symbol" => :symbol, 
     "Executed Shares" => :shares, 
     "Price" => :price, 
@@ -112,7 +130,7 @@ class ExecutionsDay < ActiveRecord::Base
     self.losses = executions.select {|e| e.profit_and_loss < 0.0}.inject(0.0) {|sum, e| sum + e.profit_and_loss }
     self.wins_average = self.wins / executions.select {|e| e.profit_and_loss > 0.0}.size
     self.losses_average = self.losses / executions.select {|e| e.profit_and_loss < 0.0}.size
-    self.win_percentage = (executions.select {|e| e.profit_and_loss > 0.0}.size.to_f / executions.select{|e| e.profit_and_loss != 0 }.size.to_f) * 100.0
+    self.wins_percentage = (executions.select {|e| e.profit_and_loss > 0.0}.size.to_f / executions.select{|e| e.profit_and_loss != 0 }.size.to_f) * 100.0
     self.losses_percentage = (executions.select {|e| e.profit_and_loss < 0.0}.size.to_f / executions.select{|e| e.profit_and_loss != 0 }.size.to_f) * 100.0
   end
 end

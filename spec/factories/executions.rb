@@ -3,7 +3,7 @@
 FactoryGirl.define do
   factory :execution do
     date "2012-07-07"
-    time "2012-07-07 16:47:24"
+    execution_time "2012-07-07 16:47:24"
     symbol "SINA"
     shares 100
     price 1.5

@@ -126,7 +126,6 @@ describe ExecutionsDay do
       @executions_file = File.open(File.join(::Rails.root, 'spec', 'factories', "OrdersTest 2012-07-14.txt"))
     end
       
-      
     it "should calculate the daily pnl" do
       @executions_day.parse(@executions_file, "Orders 2012-07-14.txt")
       @executions_day.profit_and_loss.should == 22.35
@@ -154,7 +153,7 @@ describe ExecutionsDay do
       
     it "should calculate the win percentage rate" do
       @executions_day.parse(@executions_file, "Orders 2012-07-14.txt")
-      @executions_day.win_percentage.should == 75.0
+      @executions_day.wins_percentage.should == 75.0
     end
       
     it "should calculate the losses percentage rate" do

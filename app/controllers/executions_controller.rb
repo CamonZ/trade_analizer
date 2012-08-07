@@ -1,7 +1,7 @@
 class ExecutionsController < ApplicationController
   def index
     @ef = ExecutionsDay.new
-    @executions = ExecutionsDay.order("date DESC")
+    @executions = ExecutionsDay.by_date
   end
   
   def show

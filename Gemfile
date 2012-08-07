@@ -1,7 +1,8 @@
 source 'https://rubygems.org'
 
 gem 'rails', '3.2.6'
-gem 'mysql2'
+gem 'mongoid'
+gem 'bson_ext'
 
 
 # Gems used only for assets and not required
@@ -24,6 +25,7 @@ gem 'haml-rails', '>= 0.3.4', :group => :development
 group :development, :test do
   gem "rspec"
   gem "rspec-rails", ">= 2.10.1"
+  gem "mongoid-rspec"
   gem "remarkable", "~> 4.0.0.alpha4"
   gem "remarkable_activerecord", "~> 4.0.0.alpha4"
   gem "factory_girl_rails", ">= 3.3.0"
