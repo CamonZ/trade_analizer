@@ -118,6 +118,57 @@ describe ExecutionsDay do
       @executions_day.send(:parse_string, [" ARCA"]).should == "ARCA"
       @executions_day.send(:parse_string, [" SSD "]).should == "SSD"
     end
-    
   end
+
+  describe "when calculating the statistics of the executions day" do
+    before do
+      @executions_day = ExecutionsDay.new
+      @executions_file = File.open(File.join(::Rails.root, 'spec', 'factories', "OrdersTest 2012-07-14.txt"))
+    end
+      
+      
+    it "should calculate the daily pnl" do
+      @executions_day.parse(@executions_file, "Orders 2012-07-14.txt")
+      @executions_day.profit_and_loss.should == 22.35
+    end
+      
+    it "should calculate the winnings for the day" do
+      @executions_day.parse(@executions_file, "Orders 2012-07-14.txt")
+      @executions_day.wins.should == 27.0
+    end
+      
+    it "should calculate the losses for the day" do
+      @executions_day.parse(@executions_file, "Orders 2012-07-14.txt")
+      @executions_day.losses.should == -4.65
+    end
+      
+    it "should calculate the winning average for the day" do
+      @executions_day.parse(@executions_file, "Orders 2012-07-14.txt")
+      @executions_day.wins_average.should == 9
+    end
+      
+    it "should calculate the losses average for the day" do
+      @executions_day.parse(@executions_file, "Orders 2012-07-14.txt")
+      @executions_day.losses_average.should == -4.65
+    end
+      
+    it "should calculate the win percentage rate" do
+      @executions_day.parse(@executions_file, "Orders 2012-07-14.txt")
+      @executions_day.win_percentage.should == 75.0
+    end
+      
+    it "should calculate the losses percentage rate" do
+      @executions_day.parse(@executions_file, "Orders 2012-07-14.txt")
+      @executions_day.losses_percentage.should == 25.0
+    end
+      
+    it "should calculate the best stock for the day" do
+      pending
+    end
+      
+    it "should calculate the worst stock for the day" do
+      pending
+    end
+  end
+  
 end

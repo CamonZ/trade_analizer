@@ -1,6 +1,7 @@
 require 'fileutils'
 class ExecutionsDay < ActiveRecord::Base
   has_many :executions, :order => :time
+  before_save :calculate_statistics
   
   validates_presence_of :date
   
@@ -103,5 +104,15 @@ class ExecutionsDay < ActiveRecord::Base
   def create_execution_from_hash(values)
     @exec = Execution.new(values)
     self.executions << @exec
+  end
+  
+  def calculate_statistics
+    self.profit_and_loss = executions.inject(0.0) {|sum, e| sum + e.profit_and_loss }
+    self.wins = executions.select {|e| e.profit_and_loss > 0.0}.inject(0.0) {|sum, e| sum + e.profit_and_loss }
+    self.losses = executions.select {|e| e.profit_and_loss < 0.0}.inject(0.0) {|sum, e| sum + e.profit_and_loss }
+    self.wins_average = self.wins / executions.select {|e| e.profit_and_loss > 0.0}.size
+    self.losses_average = self.losses / executions.select {|e| e.profit_and_loss < 0.0}.size
+    self.win_percentage = (executions.select {|e| e.profit_and_loss > 0.0}.size.to_f / executions.select{|e| e.profit_and_loss != 0 }.size.to_f) * 100.0
+    self.losses_percentage = (executions.select {|e| e.profit_and_loss < 0.0}.size.to_f / executions.select{|e| e.profit_and_loss != 0 }.size.to_f) * 100.0
   end
 end
