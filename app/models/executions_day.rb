@@ -19,7 +19,10 @@ class ExecutionsDay
   scope :by_date, order_by(:date => :desc)
   
   has_many :executions
-  before_save :calculate_statistics
+  embeds_many :stocks_profit_and_loss, :class_name => "StockProfitAndLoss"
+  index({"stocks_profit_and_loss.symbol" => 1}, {:unique => true})
+  
+  before_save :calculate_statistics, :on => :create
   
   validates_presence_of :date
   
@@ -132,5 +135,16 @@ class ExecutionsDay
     self.losses_average = self.losses / executions.select {|e| e.profit_and_loss < 0.0}.size
     self.wins_percentage = (executions.select {|e| e.profit_and_loss > 0.0}.size.to_f / executions.select{|e| e.profit_and_loss != 0 }.size.to_f) * 100.0
     self.losses_percentage = (executions.select {|e| e.profit_and_loss < 0.0}.size.to_f / executions.select{|e| e.profit_and_loss != 0 }.size.to_f) * 100.0
+    
+    executions.each do |e|
+      stock_pnl = stocks_profit_and_loss.find_or_initialize_by(:symbol => e.symbol)
+      
+      if e.profit_and_loss > 0
+        stock_pnl.wins += e.profit_and_loss
+      else
+        stock_pnl.losses += e.profit_and_loss
+      end
+      stock_pnl.profit_and_loss = stock_pnl.wins + stock_pnl.losses
+    end
   end
 end

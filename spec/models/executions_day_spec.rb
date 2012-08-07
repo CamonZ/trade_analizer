@@ -4,6 +4,8 @@ require 'fileutils'
 describe ExecutionsDay do
   should_respond_to :parse
   should_have_many :executions
+  it{ should embed_many(:stocks_profit_and_loss) }
+  it { should have_index_for("stocks_profit_and_loss.symbol" => 1).with_options(unique: true) }
   
   should_validate_presence_of :date
   
@@ -160,14 +162,30 @@ describe ExecutionsDay do
       @executions_day.parse(@executions_file, "Orders 2012-07-14.txt")
       @executions_day.losses_percentage.should == 25.0
     end
+    
+    describe "when breaking down the pnl for each stock on the trading day on the Stocks Profit and Loss Collection" do
+      before do
+        @executions_file = File.open(File.join(::Rails.root, 'spec', 'factories', "Orders 2012-07-02.txt"))
+        @executions_day.parse(@executions_file, "Orders 2012-07-02.txt")
+      end
       
-    it "should calculate the best stock for the day" do
-      pending
-    end
+      it "has one instance per stock each traded" do
+        @executions_day.stocks_profit_and_loss.size.should == 4
+      end
       
-    it "should calculate the worst stock for the day" do
-      pending
+      it "an instance has the wins for the stock" do
+        @executions_day.stocks_profit_and_loss.where(:symbol => "NKE").first.wins.should == 61.5
+      end
+      
+      it "an instance has the losses for the stock" do
+        @executions_day.stocks_profit_and_loss.where(:symbol => "NKE").first.losses.should == -16.66
+      end
+      
+      it "an instance has the profit_and_loss for the stock" do
+        @executions_day.stocks_profit_and_loss.where(:symbol => "NKE").first.profit_and_loss.should == 44.84
+      end
     end
+    
   end
   
 end
