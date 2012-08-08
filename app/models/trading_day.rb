@@ -1,5 +1,5 @@
 require 'fileutils'
-class ExecutionsDay
+class TradingDay
   include Mongoid::Document
   include Mongoid::Timestamps
   

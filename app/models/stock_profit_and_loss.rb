@@ -8,6 +8,6 @@ class StockProfitAndLoss
   field :symbol, :type => String
   
   has_many :executions
-  embedded_in :executions_day
+  embedded_in :trading_day
   
 end

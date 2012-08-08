@@ -1,11 +1,11 @@
 class ExecutionsController < ApplicationController
   def index
-    @ef = ExecutionsDay.new
-    @executions = ExecutionsDay.by_date
+    @ef = TradingDay.new
+    @trading_days = TradingDay.by_date
   end
   
   def show
-    @executions_day = ExecutionsDay.find(params[:id])
+    @trading_day = TradingDay.find(params[:id])
     
     respond_to do |format|
       format.html
@@ -13,9 +13,9 @@ class ExecutionsController < ApplicationController
   end
   
   def upload
-    @executions_day = ExecutionsDay.new
+    @trading_day = TradingDay.new
 
-    @executions_day.parse(params[:executions_day][:file].tempfile, params[:executions_day][:file].original_filename)
+    @trading_day.parse(params[:trading_day][:file].tempfile, params[:trading_day][:file].original_filename)
     
     respond_to do |format|
       format.html { redirect_to root_path}

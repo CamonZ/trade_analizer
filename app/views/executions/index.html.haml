@@ -7,7 +7,7 @@
       = f.submit "Upload Executions"
   .executions
     %h2 Your Trading Days
-    - @executions.each do |e|
+    - @trading_days.each do |e|
       %ul
         %li
           = link_to(e.date.to_s, execution_path(e.id))

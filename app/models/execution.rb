@@ -18,6 +18,6 @@ class Execution
   validates_presence_of :contra, :date, :liquidity, :price, :shares, :side, :symbol, :execution_time
   validates_numericality_of :shares, :only_integer => true, :greater_than => 0
 
-  belongs_to :executions_day, :index => true
+  belongs_to :trading_day, :index => true
   belongs_to :stock_profit_and_loss, :class_name => "StockProfitAndLoss", :index => true
 end

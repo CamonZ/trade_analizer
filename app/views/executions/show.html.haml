@@ -13,7 +13,7 @@
         %th Liquidity
         %th P&L
     %tbody
-      - @executions_day.executions.each do |e|
+      - @trading_day.executions.each do |e|
         %tr{:class => cycle('odd', 'even')}
           %td
             = e.execution_time.strftime("%H:%M:%S")
