@@ -18,8 +18,8 @@ class ExecutionsDay
   
   scope :by_date, order_by(:date => :desc)
   
-  has_many :executions
-  embeds_many :stocks_profit_and_loss, :class_name => "StockProfitAndLoss"
+  has_many :executions, :autosave => true
+  embeds_many :stocks_profit_and_loss, :class_name => "StockProfitAndLoss", :cascade_callbacks => true
   index({"stocks_profit_and_loss.symbol" => 1}, {:unique => true})
   
   before_save :calculate_statistics, :on => :create
@@ -76,7 +76,6 @@ class ExecutionsDay
     end
     
     create_executions(execs)
-    
     save
   end
   
@@ -123,8 +122,8 @@ class ExecutionsDay
   end
   
   def create_execution_from_hash(values)
-    @exec = Execution.new(values)
-    self.executions << @exec
+    exec = Execution.new(values)
+    self.executions << exec
   end
   
   def calculate_statistics
