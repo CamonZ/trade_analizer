@@ -138,8 +138,10 @@ class TradingDay
       
       if e.profit_and_loss > 0
         stock_pnl.wins += e.profit_and_loss
+        stock_pnl.winning_trades += 1
       else
         stock_pnl.losses += e.profit_and_loss
+        stock_pnl.loosing_trades += 1
       end
       stock_pnl.profit_and_loss = stock_pnl.wins + stock_pnl.losses
       stock_pnl.executions << e
