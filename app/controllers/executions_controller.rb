@@ -5,7 +5,7 @@ class ExecutionsController < ApplicationController
   end
   
   def show
-    @executions_file = ExecutionsDay.find(params[:id])
+    @executions_day = ExecutionsDay.find(params[:id])
     
     respond_to do |format|
       format.html
