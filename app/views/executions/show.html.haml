@@ -1,6 +1,6 @@
 .main
   %h2 
-    = "Executions for #{@executions_file.date}"
+    = "Executions for #{@executions_day.date}"
   %table#trade_executions
     %thead
       %tr
@@ -13,10 +13,10 @@
         %th Liquidity
         %th P&L
     %tbody
-      - @executions_file.executions.each do |e|
+      - @executions_day.executions.each do |e|
         %tr{:class => cycle('odd', 'even')}
           %td
-            = e.time.strftime("%H:%M:%S")
+            = e.execution_time.strftime("%H:%M:%S")
           %td
             = e.symbol.upcase
           %td
@@ -30,7 +30,8 @@
           %td
             = e.liquidity
           %td
-            = e.profit_and_loss 
+            -if e.profit_and_loss != 0.0
+              = e.profit_and_loss 
     
   
     
