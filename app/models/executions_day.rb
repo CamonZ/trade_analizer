@@ -13,7 +13,6 @@ class ExecutionsDay
   field :wins_average, :type => Float
   field :losses_average, :type => Float
   field :wins_percentage, :type => Float
-  field :losses_percentage, :type => Float
   #(end)
   
   scope :by_date, order_by(:date => :desc)
@@ -133,7 +132,6 @@ class ExecutionsDay
     self.wins_average = self.wins / executions.select {|e| e.profit_and_loss > 0.0}.size
     self.losses_average = self.losses / executions.select {|e| e.profit_and_loss < 0.0}.size
     self.wins_percentage = (executions.select {|e| e.profit_and_loss > 0.0}.size.to_f / executions.select{|e| e.profit_and_loss != 0 }.size.to_f) * 100.0
-    self.losses_percentage = (executions.select {|e| e.profit_and_loss < 0.0}.size.to_f / executions.select{|e| e.profit_and_loss != 0 }.size.to_f) * 100.0
     
     executions.each do |e|
       stock_pnl = stocks_profit_and_loss.find_or_initialize_by(:symbol => e.symbol)

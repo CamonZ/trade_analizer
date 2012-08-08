@@ -158,11 +158,6 @@ describe ExecutionsDay do
       @executions_day.wins_percentage.should == 75.0
     end
       
-    it "should calculate the losses percentage rate" do
-      @executions_day.parse(@executions_file, "Orders 2012-07-14.txt")
-      @executions_day.losses_percentage.should == 25.0
-    end
-    
     describe "when breaking down the pnl for each stock on the trading day on the Stocks Profit and Loss Collection" do
       before do
         @executions_file = File.open(File.join(::Rails.root, 'spec', 'factories', "Orders 2012-07-02.txt"))
