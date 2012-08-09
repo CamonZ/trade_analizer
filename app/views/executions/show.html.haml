@@ -1,7 +1,9 @@
 .main
-  %h2 
-    = "Executions for #{@executions_day.date}"
-  %table#trade_executions
+  #day_statistics
+    
+  %h3 
+    = "Executions for #{@trading_day.date}"
+  %table#executions
     %thead
       %tr
         %th Time

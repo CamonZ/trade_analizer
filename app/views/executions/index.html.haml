@@ -8,7 +8,7 @@
   .executions
     %h2 Your Trading Days
     - @trading_days.each do |e|
-      %ul
+      %ul#trading_days
         %li
           = link_to(e.date.to_s, execution_path(e.id))
     
