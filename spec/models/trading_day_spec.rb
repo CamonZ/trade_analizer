@@ -188,15 +188,15 @@ describe TradingDay do
         @trading_day.stocks_profit_and_loss.where(:symbol => "NKE").first.executions.size.should == 28
       end
       
-      it "should calculate the wins_average" do
+      it "should calculate the wins_average for each stock " do
         @trading_day.stocks_profit_and_loss.where(:symbol => "NKE").first.wins_average.should == 7.688
       end
     
-      it "should calculate the losses_average" do
+      it "should calculate the losses_average for each stock " do
         @trading_day.stocks_profit_and_loss.where(:symbol => "NKE").first.losses_average.should == -3.332
       end
     
-      it "should calculate the wins_percentage" do
+      it "should calculate the wins_percentage for each stock " do
         @trading_day.stocks_profit_and_loss.where(:symbol => "NKE").first.wins_percentage.should == 61.538
       end
       
