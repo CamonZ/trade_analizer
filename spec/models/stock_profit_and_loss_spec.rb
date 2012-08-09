@@ -27,6 +27,7 @@ describe StockProfitAndLoss do
       )
       @stock_profit_and_loss.send(:calculate_statistics)
     end
+
     it "should calculate the wins_average" do
       @stock_profit_and_loss.wins_average.should == 7.688
     end
