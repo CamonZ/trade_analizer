@@ -42,8 +42,13 @@ $subtitle-color: #3B3B3B;
       padding-top: 10px; 
       font-size: 1em;
       
+      #statistics{
+        
+      }
+      
+      
       .executions {padding-top: 15px; }
-      table#trade_executions{
+      table.executions{
         font-size: 0.75em;
         border-collapse: collapse;
         width: 540px;

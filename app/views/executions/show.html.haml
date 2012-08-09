@@ -1,39 +1,75 @@
 .main
-  #day_statistics
-    
-  %h3 
-    = "Executions for #{@trading_day.date}"
-  %table#executions
-    %thead
-      %tr
-        %th Time
-        %th Symbol
-        %th Shares
-        %th Price
-        %th Side
-        %th Contra
-        %th Liquidity
-        %th P&L
-    %tbody
-      - @trading_day.executions.each do |e|
-        %tr{:class => cycle('odd', 'even')}
-          %td
-            = e.execution_time.strftime("%H:%M:%S")
-          %td
-            = e.symbol.upcase
-          %td
-            = e.shares
-          %td
-            = e.price
-          %td
-            = e.side
-          %td
-            = e.contra
-          %td
-            = e.liquidity
-          %td
-            -if e.profit_and_loss != 0.0
-              = e.profit_and_loss 
-    
-  
-    
+  #statistics
+    %ul#day_statistics
+      %li
+        = "Profit and Loss: #{@trading_day.profit_and_loss}"
+      %li
+        = "Wins Average: #{@trading_day.wins_average}"
+      %li
+        = "Losses Average #{@trading_day.losses_average}"
+      %li
+        = "Wins Percentage: #{@trading_day.wins_percentage}%"
+      %li
+        = "Wins: #{@trading_day.wins}"
+      %li
+        = "Losses: #{@trading_day.losses}"
+      %li
+        = "Amount of Winning Trades #{@trading_day.winning_trades}"
+      %li
+        = "Amount of Loosing Trades: #{@trading_day.loosing_trades}"
+      %li
+        = "Amount of Flat Trades: #{@trading_day.flat_trades}"
+    %ul#stock_statistics
+      - @trading_day.stocks_profit_and_loss.each do |spnl|
+        %li{:id => spnl.symbol.upcase}
+          %h3
+            = spnl.symbol.upcase
+          %ul
+            %li
+              = "Profit and Loss: #{spnl.profit_and_loss}"
+            %li
+              = "Wins Average: #{spnl.wins_average}"
+            %li
+              = "Losses Average #{spnl.losses_average}"
+            %li
+              = "Wins Percentage: #{spnl.wins_percentage}%"
+            %li
+              = "Wins: #{spnl.wins}"
+            %li
+              = "Losses: #{spnl.losses}"
+            %li
+              = "Winning Trades #{spnl.winning_trades}"
+            %li
+              = "Loosing Trades: #{spnl.loosing_trades}"
+            %li
+              = "Flat Trades: #{spnl.flat_trades}"
+          %h3 
+            = "Executions:"
+          %table.executions
+            %thead
+              %tr
+                %th Time
+                %th Shares
+                %th Price
+                %th Side
+                %th Contra
+                %th Liquidity
+                %th P&L
+            %tbody
+              - spnl.executions.each do |e|
+                %tr{:class => cycle('odd', 'even')}
+                  %td
+                    = e.execution_time.strftime("%H:%M:%S")
+                  %td
+                    = e.shares
+                  %td
+                    = e.price
+                  %td
+                    = e.side
+                  %td
+                    = e.contra
+                  %td
+                    = e.liquidity
+                  %td
+                    -if e.profit_and_loss != 0.0
+                      = e.profit_and_loss
