@@ -7,6 +7,7 @@ class StockProfitAndLoss
   field :profit_and_loss, :type => Float, :default => 0.0
   field :winning_trades, :type => Integer, :default => 0
   field :loosing_trades, :type => Integer, :default => 0
+  field :flat_trades, :type => Integer, :default => 0
   field :wins_average, :type => Float
   field :losses_average, :type => Float
   field :wins_percentage, :type => Float
@@ -20,9 +21,8 @@ class StockProfitAndLoss
   private
   
   def calculate_statistics
-    self.wins_average = (self.wins / winning_trades.to_f).round(3)
-    self.losses_average = (self.losses / self.loosing_trades.to_f).round(3)
-    self.losses_average = (self.losses / self.loosing_trades.to_f).round(3)
-    self.wins_percentage = ((self.winning_trades.to_f / (self.winning_trades + self.loosing_trades).to_f) * 100.0).round(3)
+    self.wins_average = winning_trades.eql?(0) ? 0.0 :(wins / winning_trades.to_f || 1.0).round(3)
+    self.losses_average = loosing_trades.eql?(0) ? 0.0 : (losses / loosing_trades.to_f).round(3)
+    self.wins_percentage = ((winning_trades.to_f / (winning_trades + loosing_trades).to_f) * 100.0).round(3)
   end
 end

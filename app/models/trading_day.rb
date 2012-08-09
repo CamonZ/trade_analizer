@@ -15,6 +15,7 @@ class TradingDay
   field :wins_percentage, :type => Float
   field :winning_trades, :type => Integer, :default => 0
   field :loosing_trades, :type => Integer, :default => 0
+  field :flat_trades, :type => Integer, :default => 0
   #(end)
   
   scope :by_date, order_by(:date => :desc)
@@ -131,11 +132,12 @@ class TradingDay
     self.profit_and_loss = executions.inject(0.0) {|sum, e| sum + e.profit_and_loss }
     self.wins = executions.select {|e| e.profit_and_loss > 0.0}.inject(0.0) {|sum, e| sum + e.profit_and_loss }
     self.losses = executions.select {|e| e.profit_and_loss < 0.0}.inject(0.0) {|sum, e| sum + e.profit_and_loss }
-    self.wins_average = self.wins / executions.select {|e| e.profit_and_loss > 0.0}.size
-    self.losses_average = self.losses / executions.select {|e| e.profit_and_loss < 0.0}.size
+    self.wins_average = (self.wins / executions.select {|e| e.profit_and_loss > 0.0}.size).round(3)
+    self.losses_average = (self.losses / executions.select {|e| e.profit_and_loss < 0.0}.size).round(3)
     self.wins_percentage = ((executions.select {|e| e.profit_and_loss > 0.0}.size.to_f / executions.select{|e| e.profit_and_loss != 0 }.size.to_f) * 100.0).round(3)
     self.winning_trades = executions.select {|e| e.profit_and_loss > 0.0}.size
     self.loosing_trades = executions.select {|e| e.profit_and_loss < 0.0}.size
+    self.flat_trades = executions.select {|e| e.profit_and_loss == 0.0}.size
     
     executions.each do |e|
       stock_pnl = stocks_profit_and_loss.find_or_initialize_by(:symbol => e.symbol)
@@ -146,6 +148,8 @@ class TradingDay
       elsif e.profit_and_loss < 0
         stock_pnl.losses += e.profit_and_loss
         stock_pnl.loosing_trades += 1
+      else
+        stock_pnl.flat_trades += 1
       end
       stock_pnl.profit_and_loss = stock_pnl.wins + stock_pnl.losses
       stock_pnl.executions << e

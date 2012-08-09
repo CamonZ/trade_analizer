@@ -6,6 +6,7 @@ describe StockProfitAndLoss do
   it { should have_field(:profit_and_loss).of_type(Float).with_default_value_of(0.0) }
   it { should have_field(:winning_trades).of_type(Integer).with_default_value_of(0) }
   it { should have_field(:loosing_trades).of_type(Integer).with_default_value_of(0) }
+  it { should have_field(:flat_trades).of_type(Integer).with_default_value_of(0) }
   it { should have_field(:wins_average).of_type(Float) }
   it { should have_field(:losses_average).of_type(Float) }
   it { should have_field(:wins_percentage).of_type(Float) }
