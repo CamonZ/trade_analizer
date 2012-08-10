@@ -11,7 +11,7 @@ class Execution
   field :shares, :type => Integer
   field :liquidity, :type => Integer
   field :price, :type => Float
-  field :profit_and_loss, :type => Float, :default => 0.0
+  field :profit_and_loss, :type => Float
   #(end)
   
   attr_accessible :contra, :date, :liquidity, :price, :profit_and_loss, :shares, :side, :symbol, :execution_time
