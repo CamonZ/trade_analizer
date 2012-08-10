@@ -2,17 +2,26 @@
   #statistics
     %ul#day_statistics
       %li
-        = "Profit and Loss: #{@trading_day.profit_and_loss}"
+        %p.figures{:style => "font-size: 3em; float: right"}
+          = "$#{@trading_day.profit_and_loss.round(2)}"
       %li
-        = "Wins Average: #{@trading_day.wins_average}"
+        %p.figures{:style => "font-size: 2em; float: right"}
+          = "#{@trading_day.wins_percentage.round(2)}%"
       %li
-        = "Losses Average #{@trading_day.losses_average}"
+        %p.figures{:style => "font-size: 2em; float: right"}
+          - if @trading_day.losses_average != 0
+          = "#{(@trading_day.wins / (@trading_day.losses)).to_f.round(3).abs}"
+          - else
+            = @trading_day.wins_average.to_f
+        %p.clear
+      %li.spaced
+        = "Wins Average: $#{@trading_day.wins_average}"
       %li
-        = "Wins Percentage: #{@trading_day.wins_percentage}%"
+        = "Losses Average $#{@trading_day.losses_average}"
       %li
-        = "Wins: #{@trading_day.wins}"
+        = "Wins: #{@trading_day.wins.round(2)}"
       %li
-        = "Losses: #{@trading_day.losses}"
+        = "Losses: #{@trading_day.losses.round(2)}"
       %li
         = "Amount of Winning Trades #{@trading_day.winning_trades}"
       %li

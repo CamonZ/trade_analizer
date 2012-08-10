@@ -5,7 +5,7 @@ $total-columns  : 12;             // a 12-column grid
 $column-width   : 4em;            // each column is 4em wide
 $gutter-width   : 1em;            // 1em gutters between columns
 $grid-padding   : $gutter-width;  // grid-padding equal to gutters
-$title-color: #494949;
+$title-color: #606060;
 $subtitle-color: #3B3B3B;
 
 .page{
@@ -13,15 +13,16 @@ $subtitle-color: #3B3B3B;
   header, footer { clear: both; }
   header {
     .title { 
-      @include span-columns(6, 9);
+      @include span-columns(9, 12);
       padding-bottom: 15px;
-      font-size: 4em;
+      font-size: 5em;
+      font-weight: bold;
       color: $title-color;
     }
   }
-  .clear { @include reset-columns}
+  .clear { @include reset-columns }
   nav { 
-    @include span-columns(3, 12);
+    @include span-columns(3 omega, 12);
     ul{
       list-style: none; 
       padding: 0;
@@ -38,12 +39,34 @@ $subtitle-color: #3B3B3B;
   .content {
     @include span-columns(12, 12);
     .main {
-      @include span-columns(6, 9);
+      @include span-columns(12, 12);
       padding-top: 10px; 
       font-size: 1em;
       
       #statistics{
-        
+        @include span-columns(12, 12);
+        #day_statistics{
+          float: right;
+          @include span-columns(3 omega, 12);
+          li {
+            list-style: none;
+            margin: 0px 10px 10px 0px;
+            display: block;
+            clear: both;
+          }
+          
+          li.spaced { margin-top: 40px;}
+          
+          p{ display: inline; }
+          p.figures{
+            margin: 0px 0px 15px 10px;
+            font-size: 1.75em;
+            color: #585858;
+          }
+        }
+        #stock_statistics{
+           @include span-columns(8, 12);
+        }
       }
       
       
