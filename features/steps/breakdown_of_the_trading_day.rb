@@ -7,12 +7,13 @@ class BreakdownOfTheTradingDay < Spinach::FeatureSteps
     within("#day_statistics") do
       page.should have_content("Wins")
       page.should have_content("Losses")
-      page.should have_content("Profit and Loss")
+      page.should have_selector("li.profit_and_loss")
       page.should have_content("Wins Average")
       page.should have_content("Losses Average")
       page.should have_content("Winning Trades")
       page.should have_content("Loosing Trades")
-      page.should have_content("Wins Percentage")
+      page.should have_selector("li.wins_percentage")
+      page.should have_selector("li.wins_losses_ratio")
     end
   end
 

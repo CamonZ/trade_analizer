@@ -1,13 +1,13 @@
 .main
   #statistics
     %ul#day_statistics
-      %li
+      %li.profit_and_loss
         %p.figures{:style => "font-size: 3em; float: right"}
           = "$#{@trading_day.profit_and_loss.round(2)}"
-      %li
+      %li.wins_percentage
         %p.figures{:style => "font-size: 2em; float: right"}
           = "#{@trading_day.wins_percentage.round(2)}%"
-      %li
+      %li.wins_losses_ratio
         %p.figures{:style => "font-size: 2em; float: right"}
           - if @trading_day.losses_average != 0
           = "#{(@trading_day.wins / (@trading_day.losses)).to_f.round(3).abs}"

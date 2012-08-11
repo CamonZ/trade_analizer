@@ -1,4 +1,4 @@
-class ExecutionsController < ApplicationController
+class TradingDaysController < ApplicationController
   def index
     @ef = TradingDay.new
     @trading_days = TradingDay.by_date

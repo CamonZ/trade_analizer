@@ -56,10 +56,10 @@ TradeAnalizer::Application.routes.draw do
   # Note: This route will make all actions in every controller accessible via GET requests.
   # match ':controller(/:action(/:id))(.:format)'
   
-  resources :executions do
+  resources :trading_days do
     collection do
       post 'upload'
     end
   end
-  root :to => 'executions#index'
+  root :to => 'trading_days#index'
 end
