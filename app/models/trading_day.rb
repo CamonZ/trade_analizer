@@ -134,29 +134,40 @@ class TradingDay
   end
   
   def calculate_statistics
-    self.profit_and_loss = executions.inject(0.0) {|sum, e| sum + (e.profit_and_loss || 0.0) }
-    self.wins = executions.select {|e| (e.profit_and_loss || 0.0) > 0.0}.inject(0.0) {|sum, e| sum + (e.profit_and_loss || 0.0) }
-    self.losses = executions.select {|e| (e.profit_and_loss || 0.0) < 0.0}.inject(0.0) {|sum, e| sum + (e.profit_and_loss || 0.0) }
-    self.wins_average = (self.wins / (executions.select {|e| (e.profit_and_loss || 0.0) > 0.0}.size | 1)).round(2)
-    self.losses_average = (self.losses / (executions.select {|e| (e.profit_and_loss || 0.0) < 0.0}.size | 1)).round(2)
-    self.wins_percentage = ((executions.select {|e| (e.profit_and_loss || 0.0) > 0.0}.size.to_f / executions.select{|e| (e.profit_and_loss || 0.0) != 0 }.size.to_f) * 100.0).round(2)
-    self.winning_trades = executions.select {|e| (e.profit_and_loss || 0.0) > 0.0}.size
-    self.loosing_trades = executions.select {|e| (e.profit_and_loss || 0.0) < 0.0}.size
+    execs = executions.select {|e| e.profit_and_loss != nil }
+
+    self.profit_and_loss = execs.inject(0.0) {|sum, e| sum + (e.profit_and_loss || 0.0) }
+    self.wins = execs.select {|e| e.profit_and_loss > 0.0}.inject(0.0) {|sum, e| sum + e.profit_and_loss }
+    self.losses = execs.select {|e| e.profit_and_loss  < 0.0}.inject(0.0) {|sum, e| sum + e.profit_and_loss }
+    
+    self.winning_trades = execs.select {|e| e.profit_and_loss > 0.0}.size
+    self.loosing_trades = execs.select {|e| e.profit_and_loss < 0.0}.size
     self.flat_trades = (self.executions.size / 2) - (self.winning_trades + self.loosing_trades)
+    
+    self.wins_average = (self.wins / (self.winning_trades | 1)).round(2)
+    self.losses_average = (self.losses / (self.loosing_trades | 1)).round(2)
+    
+    self.wins_percentage = ((self.winning_trades.to_f / (self.winning_trades + self.loosing_trades).to_f) * 100.0).round(2)
     
     executions.each do |e|
       stock_pnl = stocks_profit_and_loss.find_or_initialize_by(:symbol => e.symbol)
       
-      if (e.profit_and_loss || 0.0) > 0
-        stock_pnl.wins += e.profit_and_loss
-        stock_pnl.winning_trades += 1
-      elsif (e.profit_and_loss || 0.0) < 0
-        stock_pnl.losses += e.profit_and_loss
-        stock_pnl.loosing_trades += 1
+      if e.profit_and_loss != nil #calculate the pnl and stats for each execution that has a positive or negative pnl
+        if e.profit_and_loss > 0.0
+          stock_pnl.wins += e.profit_and_loss
+          stock_pnl.winning_trades += 1
+        elsif e.profit_and_loss < 0.0
+          stock_pnl.losses += e.profit_and_loss
+          stock_pnl.loosing_trades += 1
+        end
+        stock_pnl.profit_and_loss = stock_pnl.wins + stock_pnl.losses
       end
-      stock_pnl.profit_and_loss = stock_pnl.wins + stock_pnl.losses
+
       stock_pnl.executions << e
+
     end
+
     stocks_profit_and_loss.each {|spnl| spnl.send(:calculate_statistics) }
+
   end
 end
