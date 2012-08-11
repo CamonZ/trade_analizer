@@ -8,6 +8,12 @@ $grid-padding   : $gutter-width;  // grid-padding equal to gutters
 $title-color: #606060;
 $subtitle-color: #3B3B3B;
 
+body{
+  display: block;
+  background: #CACACA url('bg.png');
+  font-family: Helvetica, Arial, sans-serif;
+}
+  
 .page{
   @include container;
   header, footer { clear: both; }
