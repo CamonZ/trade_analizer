@@ -31,7 +31,7 @@
     %ul#stock_statistics
       - @trading_day.stocks_profit_and_loss.each do |spnl|
         %li{:id => spnl.symbol.upcase}
-          %h3
+          %h2
             = spnl.symbol.upcase
           %ul
             %li
@@ -52,7 +52,7 @@
               = "Loosing Trades: #{spnl.loosing_trades}"
             %li
               = "Flat Trades: #{spnl.flat_trades}"
-          %h3 
+          %h2 
             = "Executions:"
           %table.executions
             %thead

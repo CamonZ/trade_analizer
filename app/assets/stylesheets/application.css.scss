@@ -12,6 +12,7 @@ body{
   display: block;
   background: #CACACA url('bg.png');
   font-family: Helvetica, Arial, sans-serif;
+  color: #404040;
 }
   
 .page{
@@ -20,7 +21,7 @@ body{
   header {
     a{text-decoration: none;}
     a:visited{
-      color: $title-color;
+      color: #509752;
       
     }
     .title { 
@@ -77,6 +78,10 @@ body{
         }
         #stock_statistics{
            @include span-columns(8, 12);
+           li h2 {
+             font-size: 1.5em;
+             color :$title-color;
+           }
         }
       }
       
