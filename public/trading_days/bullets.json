@@ -1,0 +1,5 @@
+[
+  {"title":"profit_&_loss","subtitle":"$","breakdown": {"wins" : 204.59, "losses" :-73.59}, "figure" : 131.0, "unit": "$"},
+  {"title":"wins_percentage","subtitle":"%","breakdown": {"winning_trades":23, "loosing_trades": 11, "flat_trades" : 2 }, "figure": 67.65, "unit": "%"},
+  {"title":"win/loss_ratio","breakdown":{"average_wins" : 8.9, "average_losses" : -6.69 }, "figure" : 2.78, "unit": ""}
+]

@@ -1,33 +1,9 @@
 .main
   #statistics
-    %ul#day_statistics
-      %li.profit_and_loss
-        %p.figures{:style => "font-size: 3em; float: right"}
-          = "$#{@trading_day.profit_and_loss.round(2)}"
-      %li.wins_percentage
-        %p.figures{:style => "font-size: 2em; float: right"}
-          = "#{@trading_day.wins_percentage.round(2)}%"
-      %li.wins_losses_ratio
-        %p.figures{:style => "font-size: 2em; float: right"}
-          - if @trading_day.losses_average != 0
-          = "#{(@trading_day.wins / (@trading_day.losses)).to_f.round(3).abs}"
-          - else
-            = @trading_day.wins_average.to_f
-        %p.clear
-      %li.spaced
-        = "Wins Average: $#{@trading_day.wins_average}"
-      %li
-        = "Losses Average $#{@trading_day.losses_average}"
-      %li
-        = "Wins: #{@trading_day.wins.round(2)}"
-      %li
-        = "Losses: #{@trading_day.losses.round(2)}"
-      %li
-        = "Amount of Winning Trades #{@trading_day.winning_trades}"
-      %li
-        = "Amount of Loosing Trades: #{@trading_day.loosing_trades}"
-      %li
-        = "Amount of Flat Trades: #{@trading_day.flat_trades}"
+    #day_statistics
+      #chart
+      = javascript_include_tag "bullet.js"  
+      .spaced
     %ul#stock_statistics
       - @trading_day.stocks_profit_and_loss.each do |spnl|
         %li{:id => spnl.symbol.upcase}

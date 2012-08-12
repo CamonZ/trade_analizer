@@ -11,7 +11,8 @@ $subtitle-color: #3B3B3B;
 body{
   display: block;
   background: #CACACA url('bg.png');
-  font-family: Helvetica, Arial, sans-serif;
+  font-family: 'Satisfy', Helvetica, Arial, sans-serif;
+  font-weight: lighter;
   color: #404040;
 }
   
@@ -21,7 +22,7 @@ body{
   header {
     a{text-decoration: none;}
     a:visited{
-      color: #509752;
+      color: $title-color;
       
     }
     .title { 
@@ -57,17 +58,40 @@ body{
       
       #statistics{
         @include span-columns(12, 12);
+        
+        .bullet { font: 10px sans-serif; }
+        .bullet .marker { 
+          stroke: #000; 
+          stroke-width: 2px; 
+        }
+        .bullet .tick line { 
+          stroke: #666; 
+          stroke-width: .5px; 
+        }
+        
+        .bullet .measure.wins, .bullet .measure.average_wins, .bullet .measure.winning_trades{ 
+          fill: #216c2a; 
+        }
+        
+        .bullet .measure.losses, .bullet .measure.average_losses, .bullet .measure.loosing_trades { 
+          fill: #C42303; 
+        }
+        
+        .bullet .flat_trades { fill: #404040;}
+        .bullet .title { font-size: 1.4em; font-weight: bold; text-transform:capitalize;}
+        .bullet .figure { font-size: 1.7em; font-weight: lighter; }
+        .bullet .unit { font-size: 1.7em; font-weight: lighter; fill: #808080; }
+        .bullet .subtitle { fill: #808080; }
+        
         #day_statistics{
-          float: right;
-          @include span-columns(3 omega, 12);
-          li {
-            list-style: none;
+          @include span-columns(12, 12);
+          div {
             margin: 0px 10px 10px 0px;
             display: block;
             clear: both;
           }
           
-          li.spaced { margin-top: 40px;}
+          .spaced { margin-top: 40px;}
           
           p{ display: inline; }
           p.figures{
