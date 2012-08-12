@@ -5,8 +5,6 @@ class TradingDay
   
   #fields(fold)
   field :date, :type => Date
-  field :best_stock, :type => String
-  field :worst_stock, :type => String
   field :profit_and_loss, :type => Float
   field :wins, :type => Float
   field :losses, :type => Float
