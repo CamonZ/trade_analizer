@@ -10,7 +10,7 @@
     - @trading_days.each do |e|
       %ul#trading_days
         %li
-          = link_to(e.date.to_s, trading_day_path(e.id))
+          = link_to(e.date.to_s, trading_day_date_path(e.date))
     
   
     

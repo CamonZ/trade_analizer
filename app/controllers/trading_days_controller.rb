@@ -5,7 +5,11 @@ class TradingDaysController < ApplicationController
   end
   
   def show
-    @trading_day = TradingDay.find(params[:id])
+    if params[:date]
+      @trading_day = TradingDay.where(:date=>params[:date]).first
+    else
+      @trading_day = TradingDay.find(params[:id])
+    end
     
     respond_to do |format|
       format.html
