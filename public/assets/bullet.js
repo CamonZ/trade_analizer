@@ -6,7 +6,7 @@ var chart = bulletChart()
     .width(width - margin.right - margin.left)
     .height(height - margin.top - margin.bottom);
 
-d3.json("bullets.json", function(data) {
+d3.json(window.location + "/statistics.json", function(data) {
   var data_array = data;
   var vis = d3.select("#chart").selectAll("svg")
       .data(data)
@@ -94,14 +94,19 @@ function bulletChart() {
           
       g.property("data_index", i)
       
-      var measurez = key_values.values.slice().sort(function(a, b) {return ((a < b) ? - 1 : ((a > b) ? 1 : 0))}).reverse();
-      if(measurez[0] < measurez[1]){
-        measurez = measurez.reverse();
-      }
+      var measurez = key_values.values.slice()
+        .sort(function(a, b) {
+          return ((Math.abs(a) < Math.abs(b)) ? - 1 : ((Math.abs(a) > Math.abs(b)) ? 1 : 0))
+        })
+        .reverse();
+      
+      var absMeasurez = []
+      
+      $.each(measurez, function(d, i){ absMeasurez.push(Math.abs(i)); })
       
       // Compute the new x-scale.
       var x1 = d3.scale.linear()
-          .domain([0, Math.max.apply(Math, measurez)])
+          .domain([0, Math.max.apply(Math, absMeasurez)])
           .range(reverse ? [width, 0] : [0, width]);
           
 

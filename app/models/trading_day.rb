@@ -28,7 +28,7 @@ class TradingDay
   
   @@fields_to_sym = {
     "Exec Time" => :execution_time, 
-    "Symbol" => :symbol, 
+    "Symbol" => :symbol,
     "Executed Shares" => :shares, 
     "Price" => :price, 
     "Side" => :side, 
@@ -50,12 +50,12 @@ class TradingDay
   
   def parse(file, filename)
     self.date = get_date_from_filename(filename)
-
+    
     
     if !has_required_columns?(file.readline)
       return false;
     end
-
+    
     file.rewind
     
     field_names = file.readline.scan(/([[:print:]]+)\t?/).flatten
@@ -75,9 +75,48 @@ class TradingDay
 
       execs << execution_fields
     end
-    
+      
     create_executions(execs)
     save
+  end
+  
+  def statistics_to_json()
+    res = []
+    res.push ({
+      :title => 'profit_and_loss', 
+      :subtitle => '$', 
+      :breakdown => {
+        :wins => self.wins,
+        :losses => self.losses
+      },
+      :figure => self.profit_and_loss,
+      :unit => '$' })
+    
+    res.push({
+      :title => "wins_percentage",
+      :subtitle => "%",
+      :breakdown => {
+        :winning_trades => self.winning_trades, 
+        :loosing_trades => self.loosing_trades, 
+        :flat_trades => self.flat_trades 
+      }, 
+      :figure => ((self.winning_trades.to_f / (self.loosing_trades.to_f + self.winning_trades.to_f + self.flat_trades.to_f))*100.0).round(2), 
+      :unit => "%"
+    })
+    
+    fig = (self.losses == 0.0 ? self.wins : (self.wins.to_f / self.losses.to_f))
+    
+    res.push({
+      :title => "win/loss_ratio",
+      :breakdown => {
+        :average_wins => self.wins_average, 
+        :average_losses => self.losses_average
+      }, 
+      :figure => fig.round(2).abs, 
+      :unit => ""
+    })
+    
+    res
   end
   
   private
@@ -121,6 +160,7 @@ class TradingDay
   end
   
   def create_executions(execs)
+    
     execs.each do |e|
       create_execution_from_hash(e) if e[:shares] > 0
     end
@@ -140,12 +180,15 @@ class TradingDay
     
     self.winning_trades = execs.select {|e| e.profit_and_loss > 0.0}.size
     self.loosing_trades = execs.select {|e| e.profit_and_loss < 0.0}.size
-    self.flat_trades = (self.executions.size / 2) - (self.winning_trades + self.loosing_trades)
+    self.flat_trades = (executions.size / 2) - (winning_trades + loosing_trades)
     
-    self.wins_average = (self.wins / (self.winning_trades | 1)).round(2)
-    self.losses_average = (self.losses / (self.loosing_trades | 1)).round(2)
+    self.wins_average = (winning_trades == 0 ? 0 : (wins / winning_trades.to_f))
+    self.wins_average = self.wins_average.round(2)
     
-    self.wins_percentage = ((self.winning_trades.to_f / (self.winning_trades + self.loosing_trades).to_f) * 100.0).round(2)
+    self.losses_average = (loosing_trades == 0 ? 0 : (losses / loosing_trades.to_f))
+    self.losses_average = self.losses_average.round(2)
+    
+    self.wins_percentage = ((winning_trades.to_f / (winning_trades + loosing_trades).to_f) * 100.0).round(2)
     
     executions.each do |e|
       stock_pnl = stocks_profit_and_loss.find_or_initialize_by(:symbol => e.symbol)

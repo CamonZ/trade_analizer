@@ -18,11 +18,16 @@ TradeAnalizer::Application.routes.draw do
   # Note: This route will make all actions in every controller accessible via GET requests.
   # match ':controller(/:action(/:id))(.:format)'
   
-  match 'trading_days/:date' => 'trading_days#show', :as => :trading_day_date
+  match 'trading_days/:date' => 'trading_days#show', :as => :trading_day_date, :constraints => { :date => /\d{4}-\d{2}-\d{2}/ }
+  match 'trading_days/:date/statistics' => 'trading_days#statistics', :as => :trading_day_date_statistics, :constraints => { :date => /\d{4}-\d{2}-\d{2}/ }
   
   resources :trading_days do
     collection do
       post 'upload'
+    end
+    
+    member do
+      get 'statistics'
     end
   end
   root :to => 'trading_days#index'
