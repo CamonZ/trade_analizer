@@ -5,7 +5,7 @@ class TradingDaysController < ApplicationController
   end
   
   def show
-    if params[:date]
+    if params.has_key?(:date)
       @trading_day = TradingDay.where(:date=>params[:date]).first
     else
       @trading_day = TradingDay.find(params[:id])
