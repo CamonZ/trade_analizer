@@ -7,7 +7,6 @@ var chart = bulletChart()
     .height(height - margin.top - margin.bottom);
 
 d3.json(window.location + "/statistics.json", function(data) {
-  var data_array = data.statistics;
   var vis = d3.select("#chart").selectAll("svg")
       .data(data.statistics)
     .enter().append("svg")
@@ -18,58 +17,9 @@ d3.json(window.location + "/statistics.json", function(data) {
       .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
       .call(chart);
 
+    setTitleAndFigure(vis);
   
-  var figure = vis.append("g")
-      .attr("text-anchor", "end")
-      .attr("transform", "translate(-15," + (height - margin.top - 6) / 2 + ")");
-      
-  figure.append("text")
-      .attr("class", "figure")
-      .text(function(d) { return d.figure + d.unit; });  
-  
-  var title = vis.append("g")
-      .attr("text-anchor", "end")
-      .attr("transform", "translate("+ (520 - (margin.right)) +",-2)");
-  
-  title.append("text")
-      .attr("class", "title")
-      .text(function(d) { return stringify_key(d.title); });
-    
-  vis.selectAll("rect").on("mouseover", function(d, i){
-    var str = ((d3.select(this.parentNode).property("data_index") != 1) ? d + "$" : d);
-
-    d3.select(this).transition()
-      .duration(250)
-      .attr("height", 13.3334)
-      .attr("y", 5.1667);
-    
-    d3.select(this.parentNode).selectAll("text.title")
-      .transition()
-      .text(stringify_key(this.className.animVal.split(" ")[2]));
-    
-    d3.select(this.parentNode).selectAll("text.figure")
-      .transition()
-      .text(str);
-  });
-  
-  vis.selectAll("rect").on("mouseout", function(d, i){
-    var data = data_array[d3.select(this.parentNode).property("data_index")];
-    d3.select(this).transition()
-      .attr("height", 8.3334)
-      .attr("y", 8.3334);
-    
-    d3.select(this.parentNode).selectAll("text.title")
-      .transition()
-      .text(stringify_key(this.className.animVal.split(" ")[1]));
-    
-    
-    d3.select(this.parentNode).selectAll("text.figure")
-      .transition()
-      .text(data.figure + data.unit);
-    
-    
-  });
-  
+  bindMeasuresHover(vis, data.statistics);
 });
 
 // Chart design based on the recommendations of Stephen Few. Implementation
@@ -86,7 +36,7 @@ function bulletChart() {
 
   // For each small multiple…
   function bullet(g) {
-
+    
     g.each(function(d, i) {
       var key_values = measures.call(this, d, i),
           title = d.title,
@@ -153,21 +103,19 @@ function bulletChart() {
       var format = tickFormat || x1.tickFormat(8);
       
       
-
       // Update the tick groups.
       var tick = g.selectAll("g.tick")
           .data(x1.ticks(8), function(d) {
             return this.textContent || format(d);
           });
       
-
       // Initialize the ticks with the old scale, x0.
       var tickEnter = tick.enter().append("svg:g")
           .attr("class", "tick")
           .attr("transform", bulletTranslate(x0))
           .style("opacity", 1e-6);
       
-
+      
       tickEnter.append("svg:line")
           .attr("y1", height)
           .attr("y2", height * 7 / 6);
@@ -296,6 +244,58 @@ function stringify_key(k){
   return k.replace(/_/g, " ");
 }
 
+function bindMeasuresHover(vis, data_array){
+  vis.selectAll("rect").on("mouseover", function(d, i){
+    var str = ((d3.select(this.parentNode).property("data_index") != 1) ? d + "$" : d);
+
+    d3.select(this).transition()
+      .duration(250)
+      .attr("height", 13.3334)
+      .attr("y", 5.1667);
+    
+    d3.select(this.parentNode).selectAll("text.title")
+      .transition()
+      .text(stringify_key(this.className.animVal.split(" ")[2]));
+    
+    d3.select(this.parentNode).selectAll("text.figure")
+      .transition()
+      .text(str);
+  });
+  vis.selectAll("rect").on("mouseout", function(d, i){
+    var data = data_array[d3.select(this.parentNode).property("data_index")];
+    d3.select(this).transition()
+      .attr("height", 8.3334)
+      .attr("y", 8.3334);
+    
+    d3.select(this.parentNode).selectAll("text.title")
+      .transition()
+      .text(stringify_key(this.className.animVal.split(" ")[1]));
+    
+    
+    d3.select(this.parentNode).selectAll("text.figure")
+      .transition()
+      .text(data.figure + data.unit);
+  });
+}
+
+function setTitleAndFigure(vis){
+  var figure = vis.append("g")
+      .attr("text-anchor", "end")
+      .attr("transform", "translate(-15," + (height - margin.top - 6) / 2 + ")");
+      
+  figure.append("text")
+      .attr("class", "figure")
+      .text(function(d) { return d.figure + d.unit; });  
+  
+  var title = vis.append("g")
+      .attr("text-anchor", "end")
+      .attr("transform", "translate("+ (520 - (margin.right)) +",-2)");
+  
+  title.append("text")
+      .attr("class", "title")
+      .text(function(d) { return stringify_key(d.title); });
+}
+
 $(document).ready( function(){
   $(".stocks > .button").bind('click', function(e){
     if(!$(this).hasClass("pressed")){
@@ -303,23 +303,25 @@ $(document).ready( function(){
     }
     
     $(this).toggleClass("pressed");
-    if($(this).hasClass("pressed")){
-      d3.json(window.location + "/" + $(this).text().trim() + "/statistics.json", function(data){
-        var vis = d3.select("#chart").selectAll("svg");
-        chart.duration(500);
-        vis.datum(function a(d, i){
-          d = data.statistics[i];
-          return d;
-        }).call(chart);
-      });
-    }
-    else{
-      d3.json(window.location + "/statistics.json", function(data){
-        var vis = d3.select("#chart").selectAll("svg");
-        chart.duration(500);
-        vis.data(data.statistics).call(chart);
-      });
+    
+    var url = $(this).hasClass("pressed") ? 
+      (window.location + "/" + $(this).text().trim() + "/statistics.json") : 
+      (window.location + "/statistics.json")
+    
+    d3.json(url, function(data){
+      chart.duration(500);
       
-    }
+      //removing old text elements
+      d3.select("#chart").selectAll("g[text-anchor]").remove();
+      
+      var vis = d3.select("#chart").selectAll("svg");
+        
+      vis.datum(function a(d, i){ d = data.statistics[i]; return d; })
+        .select("g[transform]").call(chart);
+        
+      setTitleAndFigure(vis.select("g[transform]"));
+      bindMeasuresHover(vis, data.statistics)
+        
+    });
   });
 })
