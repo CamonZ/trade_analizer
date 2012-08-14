@@ -18,6 +18,8 @@ class StockProfitAndLoss
   has_many :executions
   embedded_in :trading_day
   
+  scope :by_profit_and_loss, order_by(:profit_and_loss => :asc)
+  
   private
   
   def calculate_statistics
