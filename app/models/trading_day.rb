@@ -81,9 +81,8 @@ class TradingDay
   end
   
   def statistics_to_json()
-    res = {:statistics => [], :stocks => [], :executions => []}
+    res = {:statistics => [], :executions => []}
     res[:statistics] = generate_statistics_structure
-    stocks_profit_and_loss.only(:_id, :symbol).each {|spnl| res[:stocks].push({:id => spnl._id, :symbol => spnl.symbol})}
     res[:executions] = self.executions
     return res
   end
