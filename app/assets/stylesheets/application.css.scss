@@ -121,6 +121,7 @@ body{
             border: solid 1px #538312;
             background: -webkit-gradient(linear, left top, left bottom, from(#4e7d0e), to(#216c2a));
             background: -moz-linear-gradient(top,  #4e7d0e,  #216c2a);
+            box-shadow: inset 0 1px 10px 1px #75DE5B, 0px 1px 0 #254D1D, 0 1px 0px #21541F, 0 3px 6px 1px #111;
           }
           
           .button:hover { text-decoration: none; }
@@ -143,6 +144,7 @@ body{
             border: solid 1px #980c10;
             background: -webkit-gradient(linear, left top, left bottom, from(#C42303), to(#aa1317));
             background: -moz-linear-gradient(top,  #aa1317,  #C42303);
+            box-shadow: inset 0 1px 10px 1px #DE5B5B, 0px 1px 0 #4D1D1D, 0 1px 0px #541F1F, 0 3px 6px 1px #111;
           }
           .red:hover {
             background: #b61318;
