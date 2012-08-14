@@ -35,8 +35,8 @@ class StockProfitAndLoss
     res.push({
       :title => 'profit_and_loss', 
       :subtitle => '$', 
-      :breakdown => { :wins => self.wins, :losses => self.losses },
-      :figure => self.profit_and_loss,
+      :breakdown => { :wins => self.wins.round(2), :losses => self.losses.round(2) },
+      :figure => self.profit_and_loss.round(2),
       :unit => '$' })
     
     res.push({
