@@ -81,25 +81,28 @@ class TradingDay
   end
   
   def statistics_to_json()
+    res = {:statistics => [], :stocks => [], :executions => []}
+    res[:statistics] = generate_statistics_structure
+    stocks_profit_and_loss.only(:_id, :symbol).each {|spnl| res[:stocks].push({:id => spnl._id, :symbol => spnl.symbol})}
+    res[:executions] = self.executions
+    return res
+  end
+  
+  private
+  
+  def generate_statistics_structure
     res = []
-    res.push ({
+    res.push({
       :title => 'profit_and_loss', 
       :subtitle => '$', 
-      :breakdown => {
-        :wins => self.wins,
-        :losses => self.losses
-      },
+      :breakdown => { :wins => self.wins, :losses => self.losses },
       :figure => self.profit_and_loss,
       :unit => '$' })
     
     res.push({
       :title => "wins_percentage",
       :subtitle => "%",
-      :breakdown => {
-        :winning_trades => self.winning_trades, 
-        :loosing_trades => self.loosing_trades, 
-        :flat_trades => self.flat_trades 
-      }, 
+      :breakdown => { :winning_trades => self.winning_trades, :loosing_trades => self.loosing_trades, :flat_trades => self.flat_trades }, 
       :figure => ((self.winning_trades.to_f / (self.loosing_trades.to_f + self.winning_trades.to_f + self.flat_trades.to_f))*100.0).round(2), 
       :unit => "%"
     })
@@ -107,19 +110,15 @@ class TradingDay
     fig = (self.losses == 0.0 ? self.wins : (self.wins.to_f / self.losses.to_f))
     
     res.push({
-      :title => "win/loss_ratio",
-      :breakdown => {
-        :average_wins => self.wins_average, 
-        :average_losses => self.losses_average
-      }, 
+      :title => "wins/losses_ratio",
+      :breakdown => { :average_wins => self.wins_average, :average_losses => self.losses_average }, 
       :figure => fig.round(2).abs, 
       :unit => ""
     })
     
-    res
+    return res
+    
   end
-  
-  private
   
   def has_required_columns?(first_line)
     columns = ["Exec Time", "Symbol", "Executed Shares", "Price", "Side", "Contra", "Liquidity", "P&L"]
@@ -160,10 +159,7 @@ class TradingDay
   end
   
   def create_executions(execs)
-    
-    execs.each do |e|
-      create_execution_from_hash(e) if e[:shares] > 0
-    end
+    execs.each {|e| create_execution_from_hash(e) if e[:shares] > 0}
   end
   
   def create_execution_from_hash(values)
@@ -192,7 +188,7 @@ class TradingDay
     
     executions.each do |e|
       stock_pnl = stocks_profit_and_loss.find_or_initialize_by(:symbol => e.symbol)
-      
+
       if e.profit_and_loss != nil #calculate the pnl and stats for each execution that has a positive or negative pnl
         if e.profit_and_loss > 0.0
           stock_pnl.wins += e.profit_and_loss
