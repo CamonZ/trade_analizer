@@ -126,7 +126,9 @@ function bulletChart() {
 
       // Update the measure rects.
       var measure = g.selectAll("rect.measure")
-          .data(measurez);
+          .data(measurez)
+      
+      measure.attr('class', 'measure');
       
       measure.enter().append("svg:rect")
           .attr("class", function(v, i) { return "measure " + title + " " + key_values.keys[key_values.values.indexOf(v)]; })
@@ -140,14 +142,13 @@ function bulletChart() {
           .attr("x", reverse ? x1 : 0);
 
       measure.transition()
+          .attr("class", function(v, i) { return "measure " + title + " " + key_values.keys[key_values.values.indexOf(v)]; })
           .duration(duration)
           .attr("width", w1)
           .attr("height", height / 3)
           .attr("x", reverse ? x1 : 0)
           .attr("y", height / 3);
       
-      
-
       // Compute the tick format.
       var format = tickFormat || x1.tickFormat(8);
       
@@ -294,3 +295,31 @@ function bulletWidth(x) {
 function stringify_key(k){
   return k.replace(/_/g, " ");
 }
+
+$(document).ready( function(){
+  $(".stocks > .button").bind('click', function(e){
+    if(!$(this).hasClass("pressed")){
+      $(".button.pressed").toggleClass("pressed");
+    }
+    
+    $(this).toggleClass("pressed");
+    if($(this).hasClass("pressed")){
+      d3.json(window.location + "/" + $(this).text().trim() + "/statistics.json", function(data){
+        var vis = d3.select("#chart").selectAll("svg");
+        chart.duration(500);
+        vis.datum(function a(d, i){
+          d = data.statistics[i];
+          return d;
+        }).call(chart);
+      });
+    }
+    else{
+      d3.json(window.location + "/statistics.json", function(data){
+        var vis = d3.select("#chart").selectAll("svg");
+        chart.duration(500);
+        vis.data(data.statistics).call(chart);
+      });
+      
+    }
+  });
+})
