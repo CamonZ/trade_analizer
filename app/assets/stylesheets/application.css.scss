@@ -64,7 +64,7 @@ body{
           color: $title-color;
         }
         
-        #chart{
+        #bullet_chart{
           @include span-columns(10,12);
           display:block;
           float: none;

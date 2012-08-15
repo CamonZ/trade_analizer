@@ -2,12 +2,13 @@
   = javascript_include_tag "trading_day"
 .main
   #statistics
-    #chart
+    #bullet_chart
   
     .stocks
       - @trading_day.stocks_profit_and_loss.by_profit_and_loss.each do |spnl|
         %div{:class => "button #{(spnl.profit_and_loss > 0 ? 'green' : 'red')}"}
           = spnl.symbol
+    #line_chart
     %h2
       Executions
     %table.executions
@@ -24,19 +25,19 @@
       %tbody
         - @trading_day.executions.each do |e|
           %tr{:class => "#{e.symbol.downcase} #{cycle('odd', 'even')} execution"}
-            %td
+            %td.execution_time
               = e.execution_time.strftime("%H:%M:%S")
-            %td
+            %td.symbol
               = e.symbol.upcase
-            %td
+            %td.shares
               = e.shares
-            %td
+            %td.price
               = e.price
-            %td
+            %td.side
               = e.side
-            %td
+            %td.contra
               = e.contra
-            %td
+            %td.liquidity
               = e.liquidity
             %td
               -if e.profit_and_loss != 0.0
