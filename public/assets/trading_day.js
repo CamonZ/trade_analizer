@@ -30,13 +30,12 @@ function bulletChart() {
       reverse = false,
       duration = 0,
       measures = bulletMeasures,
-      width = 380,
+      width = 960,
       height = 30,
       tickFormat = null;
 
   // For each small multiple…
   function bullet(g) {
-    
     g.each(function(d, i) {
       var key_values = measures.call(this, d, i),
           title = d.title,
@@ -211,34 +210,31 @@ function bulletChart() {
     duration = x;
     return bullet;
   };
+  
+  function bulletMeasures(d) {
+    var kv = {"keys": [], "values": []};
+    $.each(d.breakdown, function(k, v) {
+      kv.keys.push(k);
+      kv.values.push(v);
+    })
+    return kv;
+  }
 
+  function bulletTranslate(x) {
+    return function(d) {
+      return "translate(" + x(d) + ",0)";
+    };
+  }
+
+  function bulletWidth(x) {
+    var x0 = x(0);
+    return function(d) {
+      return Math.abs(x(d) - x0);
+    };
+  }
+  
   return bullet;
 };
-
-function bulletMeasures(d) {
-  var kv = {"keys": [], "values": []};
-
-  $.each(d.breakdown, function(k, v) {
-    kv.keys.push(k);
-    kv.values.push(v);
-  })
-  
-  
-  return kv;
-}
-
-function bulletTranslate(x) {
-  return function(d) {
-    return "translate(" + x(d) + ",0)";
-  };
-}
-
-function bulletWidth(x) {
-  var x0 = x(0);
-  return function(d) {
-    return Math.abs(x(d) - x0);
-  };
-}
 
 function stringify_key(k){
   return k.replace(/_/g, " ");
