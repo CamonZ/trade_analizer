@@ -81,9 +81,8 @@ class TradingDay
   end
   
   def statistics_to_json()
-    res = {:statistics => [], :executions => []}
+    res = {:statistics => []}
     res[:statistics] = generate_statistics_structure
-    res[:executions] = self.executions
     return res
   end
   

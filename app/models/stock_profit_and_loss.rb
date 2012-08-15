@@ -21,9 +21,8 @@ class StockProfitAndLoss
   scope :by_profit_and_loss, order_by(:profit_and_loss => :asc)
   
   def statistics_to_json
-    res = {:statistics => [], :executions => []}
+    res = {:statistics => []}
     res[:statistics] = generate_statistics_structure
-    res[:executions] = self.executions
     
     return res
   end
