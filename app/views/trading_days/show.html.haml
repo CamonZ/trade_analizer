@@ -21,7 +21,7 @@
           %th P&L
       %tbody
         - @trading_day.executions.each do |e|
-          %tr{:class => cycle('odd', 'even')}
+          %tr{:class => "#{e.symbol.downcase} #{cycle('odd', 'even')} execution"}
             %td
               = e.execution_time.strftime("%H:%M:%S")
             %td

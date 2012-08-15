@@ -298,11 +298,22 @@ function setTitleAndFigure(vis){
 
 $(document).ready( function(){
   $(".stocks > .button").bind('click', function(e){
+
     if(!$(this).hasClass("pressed")){
       $(".button.pressed").toggleClass("pressed");
     }
-    
+
     $(this).toggleClass("pressed");
+    
+    // fading the corresponding executions
+    if($(this).hasClass("pressed")){ 
+      $(".execution").not("." + $(this).text().toLowerCase().trim()).fadeOut(500); 
+      $(".execution." + $(this).text().toLowerCase().trim() + ":hidden").fadeIn(500); 
+    }
+    else{ 
+      $(".execution").fadeIn(500); 
+    }
+    
     
     var url = $(this).hasClass("pressed") ? 
       (window.location + "/" + $(this).text().trim() + "/statistics.json") : 
