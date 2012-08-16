@@ -117,6 +117,15 @@ body{
            fill: #444;
            font-size: 0.7em;
            }
+           
+           .point{
+             stroke-width: 2px;
+             stroke: $title-color;
+             cursor: pointer;
+           }
+           
+           .point.bot{ stroke: #216c2a; fill: #538312; }
+           .point.sld, .point.ssd {stroke: #C42303; fill: #E62802;}
         }
         
         .stocks{

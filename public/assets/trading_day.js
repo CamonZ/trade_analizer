@@ -29,7 +29,7 @@
         setTitleAndFigure(vis);
   
         bindMeasuresHover(vis, data.statistics);
-        $("#bullet_chart").trigger("bullet_chart_ready");
+        $("#bullet_chart").trigger("bullet_chart.ready");
       });
      
       // Chart design based on the recommendations of Stephen Few. Implementation
@@ -86,8 +86,6 @@
             // Update the measure rects.
             var measure = g.selectAll("rect.measure")
                 .data(measurez)
-      
-            measure.attr('class', 'measure');
       
             measure.enter().append("svg:rect")
                 .attr("class", function(v, i) { return "measure " + title + " " + key_values.keys[key_values.values.indexOf(v)]; })
@@ -232,16 +230,12 @@
         }
 
         function bulletTranslate(x) {
-          return function(d) {
-            return "translate(" + x(d) + ",0)";
-          };
+          return function(d) { return "translate(" + x(d) + ",0)"; };
         }
 
         function bulletWidth(x) {
           var x0 = x(0);
-          return function(d) {
-            return Math.abs(x(d) - x0);
-          };
+          return function(d) { return Math.abs(x(d) - x0); };
         }
   
         return bullet;
@@ -308,7 +302,7 @@
           $(this).toggleClass("pressed");
     
           // fading the corresponding executions
-          if($(this).hasClass("pressed")){ 
+          if($(this).hasClass("pressed")){
             $(".execution").not("." + $(this).text().toLowerCase().trim()).fadeOut(500); 
             $(".execution." + $(this).text().toLowerCase().trim() + ":hidden").fadeIn(500); 
           }
@@ -334,7 +328,8 @@
         
             setTitleAndFigure(vis.select("g[transform]"));
             bindMeasuresHover(vis, data.statistics)
-        
+            
+            $("#bullet_chart").trigger("bullet_chart.symbol_changed")
           });
         });
       });
@@ -358,9 +353,7 @@
                    .append("svg:g")
                      .attr("transform", "translate(50, 20)");
         
-        
         function line(){
-          debugger;
           var pnl = 0.0, 
               max = 0.0, 
               min = 0.0;
@@ -377,18 +370,16 @@
             if(pnl < min) min = pnl;
           });
           
-          
           var yScale = d3.scale.linear().domain([(min * 1.1), (max * 1.1)]).range([height, 0]);
           var xScale = d3.time.scale().domain([firstExecutionTime, lastExecutionTime]).range([0, width])
-          
           
           vis.selectAll("path.line")
             .data([data])
             .enter().append("svg:path")
             .attr("d", 
               d3.svg.line()
-                .x(function(d, i) { console.log(xScale(d.execution_time)); return xScale(d.execution_time);})
-                .y(function(d, i){ yScale(d.profit_and_loss); return yScale(d.profit_and_loss);})
+                .x(function(d, i) { return xScale(d.execution_time);})
+                .y(function(d, i){ return yScale(d.profit_and_loss);})
                 .interpolate('linear')
             )
             .attr('class', 'pnl_line');
@@ -410,8 +401,6 @@
             .attr('text-anchor', 'end')
             .attr('dy', 2)
             .attr('dx', -4)
-            
-          
           
           xScale.tickFormat("%i:%m");
           
@@ -431,7 +420,19 @@
             .text(function(d){return printTimeFormat(d);})
             .attr('text-anchor', 'end')
             .attr('dy', height + 25)
-            .attr('dx', 13)
+            .attr('dx', 13);
+            
+          vis.selectAll(".point")
+            .data(data)
+            .enter()
+            .append("svg:circle")
+              .attr("class", function(d, i){debugger; return "point " + d.side; })
+              .attr("r", 4)
+              .attr("cx", function(d, i){return xScale(d.execution_time); })
+              .attr("cy", function(d, i){return yScale(d.profit_and_loss); })
+            .on('mouseover', function(){ d3.select(this).attr('r', 8);})
+            .on('mouseout',  function(){ d3.select(this).attr('r', 4);})
+            .on('click', function(d, i){ console.log (d, i)});
         }
         
         line.width = function(x) {
@@ -454,7 +455,8 @@
             d.push({
               'execution_time' : timeFormat.parse($(this).find(".execution_time").first().text().trim()),
               'execution_profit_and_loss' : parseFloat($(this).find(".profit_and_loss").first().text().trim() || "0"),
-              'profit_and_loss' : pnl
+              'profit_and_loss' : pnl,
+              'side': $(this).find(".side").text().trim().toLowerCase()
             });
           });
           return d;
@@ -473,7 +475,7 @@
     }
     
     
-    $("#bullet_chart").bind('bullet_chart_ready', function(){
+    $("#bullet_chart").bind('bullet_chart.ready', function(){
       pnlLine = profitAndLossLine();
     });
     
