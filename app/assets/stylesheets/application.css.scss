@@ -102,7 +102,7 @@ body{
           }
           .pnl_line{ 
             stroke-width: 2px;
-            stroke: #C80000;
+            stroke: #2D5070;
             fill: none;
            }
            
@@ -175,7 +175,7 @@ body{
             color: #faddde;
             border: solid 1px #980c10;
             background: -webkit-gradient(linear, left top, left bottom, from(#C42303), to(#aa1317));
-            background: -moz-linear-gradient(top,  #aa1317,  #C42303);
+            background: -moz-linear-gradient(top,  #C42303, #aa1317);
             box-shadow: inset 0 1px 10px 1px #DE5B5B, 0px 1px 0 #4D1D1D, 0 1px 0px #541F1F, 0 3px 6px 1px #111;
           }
           .red:hover {
