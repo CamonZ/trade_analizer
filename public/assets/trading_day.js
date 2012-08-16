@@ -1,7 +1,6 @@
 (function(){
   $(function(){
-    var spnl = {},
-        pnlBullet = null,
+    var pnlBullet = null,
         pnlLine = null;
     
     function profitAndLossBullet(){
@@ -14,8 +13,6 @@
           .height(height - margin.top - margin.bottom);
 
       d3.json(window.location + "/statistics.json", function(data) {
-        spnl = data;
-        
         var vis = d3.select("#bullet_chart").selectAll("svg")
             .data(data.statistics)
           .enter().append("svg")
@@ -361,8 +358,6 @@
               lastExecutionTime = timeFormat.parse($(".execution_time").last().text().trim());
           
           
-          var data = buildDataFromHTML();
-          
           pnl = 0.0;
           $(data).each(function(i){
             pnl += this.execution_profit_and_loss;
@@ -462,12 +457,14 @@
           return d;
         }
         
+        var data = buildDataFromHTML();
+        
         return line;
       }
       
       var chart = lineChart()
         .width(width - margin.right - margin.left)
-        .height(height - margin.top - margin.bottom).call(this);
+        .height(height - margin.top - margin.bottom).call(chart);
     }
     
     function stringify_key(k){
