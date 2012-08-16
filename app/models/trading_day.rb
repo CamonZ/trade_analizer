@@ -72,7 +72,9 @@ class TradingDay
       field_names.each do |fn|
         execution_fields[@@fields_to_sym[fn]] = self.send(("parse_" + @@fieldnames_to_methods[fn]).to_sym, fields)
       end
-
+      
+      execution_fields[:time_of_day] = set_time_of_day(execution_fields[:execution_time])
+      
       execs << execution_fields
     end
       
@@ -154,6 +156,29 @@ class TradingDay
     liq_field = f.shift.scan(/(\d+)\/(\d+)/).flatten
     liq_field = liq_field[0].to_i < liq_field[1].to_i ? -liq_field[1].to_i : liq_field[1].to_i
     liq_field
+  end
+  
+  def set_time_of_day(execution_time)
+    pre = DateTime.parse(self.date.to_s + " 09:30:00")
+    open = DateTime.parse(self.date.to_s + " 11:00:00")
+    midday = DateTime.parse(self.date.to_s + " 14:30:00")
+    close = DateTime.parse(self.date.to_s + " 16:00:00")
+    
+    res = ""
+    
+    if(execution_time < pre)
+      res = "premarket"
+    elsif(execution_time < open)
+      res = "open"
+    elsif(execution_time < midday)
+      res = "midday"
+    elsif(execution_time < close)
+      res = "close"
+    else
+      res = "aftermarket"
+    end
+    
+    res
   end
   
   def create_executions(execs)
