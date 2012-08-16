@@ -421,7 +421,7 @@
             .data(data)
             .enter()
             .append("svg:circle")
-              .attr("class", function(d, i){debugger; return "point " + d.side; })
+              .attr("class", function(d, i){return "point " + d.side; })
               .attr("r", 4)
               .attr("cx", function(d, i){return xScale(d.execution_time); })
               .attr("cy", function(d, i){return yScale(d.profit_and_loss); })
