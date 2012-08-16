@@ -91,10 +91,33 @@ body{
             font-size: 1.75em;
             color: $title-color;
           }
-          
-          
         }
         
+        #line_chart{
+          margin-top: 3em;
+          h3{
+            text-align: center;
+            margin: 30px auto -10px auto;
+            color: $subtitle-color;
+          }
+          .pnl_line{ 
+            stroke-width: 2px;
+            stroke: #C80000;
+            fill: none;
+           }
+           
+           .tick_y line, .tick_x line{
+           stroke-width: 1px;
+           stroke: #333;
+           stroke-opacity: 0.4;
+           shape-rendering: crispedges;
+           }
+           
+           .tick_y text, .tick_x text{
+           fill: #444;
+           font-size: 0.7em;
+           }
+        }
         
         .stocks{
           margin: 15px 0px 30px 0px;

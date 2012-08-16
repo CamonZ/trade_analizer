@@ -3,12 +3,14 @@
 .main
   #statistics
     #bullet_chart
-  
     .stocks
       - @trading_day.stocks_profit_and_loss.by_profit_and_loss.each do |spnl|
         %div{:class => "button #{(spnl.profit_and_loss > 0 ? 'green' : 'red')}"}
           = spnl.symbol
+    
     #line_chart
+      %h3
+        Profit & Loss Analisys
     %h2
       Executions
     %table.executions
@@ -39,7 +41,7 @@
               = e.contra
             %td.liquidity
               = e.liquidity
-            %td
+            %td.profit_and_loss
               -if e.profit_and_loss != 0.0
                 = e.profit_and_loss
     

@@ -1,5 +1,8 @@
 (function(){
   $(function(){
+    var spnl = {},
+        pnlBullet = null,
+        pnlLine = null;
     
     function profitAndLossBullet(){
       var width = 960,
@@ -11,6 +14,8 @@
           .height(height - margin.top - margin.bottom);
 
       d3.json(window.location + "/statistics.json", function(data) {
+        spnl = data;
+        
         var vis = d3.select("#bullet_chart").selectAll("svg")
             .data(data.statistics)
           .enter().append("svg")
@@ -21,9 +26,10 @@
             .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
             .call(chart);
 
-          setTitleAndFigure(vis);
+        setTitleAndFigure(vis);
   
         bindMeasuresHover(vis, data.statistics);
+        $("#bullet_chart").trigger("bullet_chart_ready");
       });
      
       // Chart design based on the recommendations of Stephen Few. Implementation
@@ -85,6 +91,7 @@
       
             measure.enter().append("svg:rect")
                 .attr("class", function(v, i) { return "measure " + title + " " + key_values.keys[key_values.values.indexOf(v)]; })
+                .property("value", function(v, i){ return v;})
                 .attr("width", w0)
                 .attr("height", height / 3)
                 .attr("x", reverse ? x0 : 0)
@@ -294,7 +301,6 @@
       
       $(document).ready(function(){
         $(".stocks > .button").bind('click', function(e){
-
           if(!$(this).hasClass("pressed")){
             $(".button.pressed").toggleClass("pressed");
           }
@@ -334,11 +340,146 @@
       });
     }
     
+    function profitAndLossLine(){
+      var width = 960,
+          height = 380,
+          margin = {top: 15, right: 40, bottom: 20, left: 80};
+      
+      function lineChart(){
+        var width = 960,
+            height = 400,
+            timeFormat = d3.time.format("%H:%M:%S"),
+            printTimeFormat = d3.time.format("%H:%M");
+        
+        var vis = d3.select('#line_chart')
+                   .append('svg:svg')
+                     .attr('width', width)
+                     .attr('height', height)
+                   .append("svg:g")
+                     .attr("transform", "translate(50, 20)");
+        
+        
+        function line(){
+          debugger;
+          var pnl = 0.0, 
+              max = 0.0, 
+              min = 0.0;
+          var firstExecutionTime = timeFormat.parse($(".execution_time").first().text().trim()),
+              lastExecutionTime = timeFormat.parse($(".execution_time").last().text().trim());
+          
+          
+          var data = buildDataFromHTML();
+          
+          pnl = 0.0;
+          $(data).each(function(i){
+            pnl += this.execution_profit_and_loss;
+            if(pnl > max) max = pnl;
+            if(pnl < min) min = pnl;
+          });
+          
+          
+          var yScale = d3.scale.linear().domain([(min * 1.1), (max * 1.1)]).range([height, 0]);
+          var xScale = d3.time.scale().domain([firstExecutionTime, lastExecutionTime]).range([0, width])
+          
+          
+          vis.selectAll("path.line")
+            .data([data])
+            .enter().append("svg:path")
+            .attr("d", 
+              d3.svg.line()
+                .x(function(d, i) { console.log(xScale(d.execution_time)); return xScale(d.execution_time);})
+                .y(function(d, i){ yScale(d.profit_and_loss); return yScale(d.profit_and_loss);})
+                .interpolate('linear')
+            )
+            .attr('class', 'pnl_line');
+          
+          var ticks = vis.selectAll(".tick_y")
+            .data(yScale.ticks(6))
+            .enter().append("svg:g")
+            .attr('transform', function(d){ return "translate(0," + yScale(d)+" )"})
+            .attr("class", "tick_y");
+            
+          ticks.append("svg:line")
+            .attr('y1', 0)
+            .attr('y2', 0)
+            .attr('x1', 0)
+            .attr('x2', width);
+          
+          ticks.append("svg:text")
+            .text(function(d){return d + "$";})
+            .attr('text-anchor', 'end')
+            .attr('dy', 2)
+            .attr('dx', -4)
+            
+          
+          
+          xScale.tickFormat("%i:%m");
+          
+          ticks = vis.selectAll(".tick_x")
+            .data(xScale.ticks(15))
+            .enter().append("svg:g")
+            .attr('transform', function(d){ return "translate("+ xScale(d) + ", 0)"})
+            .attr('class', 'tick_x');
+            
+          ticks.append("svg:line")
+            .attr('y1', height + 15)
+            .attr('y2', height + 5)
+            .attr('x1', 0)
+            .attr('x2', 0);
+            
+          ticks.append("svg:text")
+            .text(function(d){return printTimeFormat(d);})
+            .attr('text-anchor', 'end')
+            .attr('dy', height + 25)
+            .attr('dx', 13)
+        }
+        
+        line.width = function(x) {
+          if (!arguments.length) return width;
+          width = x;
+          return line;
+        };
+        
+        line.height = function(x) {
+          if (!arguments.length) return height;
+          height = x;
+          return line;
+        };
+        
+        function buildDataFromHTML(){
+          var d = [];
+          pnl = 0.0;
+          $(".execution").each(function(i){
+            pnl += parseFloat($(this).find(".profit_and_loss").first().text().trim() || "0");
+            d.push({
+              'execution_time' : timeFormat.parse($(this).find(".execution_time").first().text().trim()),
+              'execution_profit_and_loss' : parseFloat($(this).find(".profit_and_loss").first().text().trim() || "0"),
+              'profit_and_loss' : pnl
+            });
+          });
+          return d;
+        }
+        
+        return line;
+      }
+      
+      var chart = lineChart()
+        .width(width - margin.right - margin.left)
+        .height(height - margin.top - margin.bottom).call(this);
+    }
+    
     function stringify_key(k){
       return k.replace(/_/g, " ");
     }
     
-    var pnlb = profitAndLossBullet();
+    
+    $("#bullet_chart").bind('bullet_chart_ready', function(){
+      pnlLine = profitAndLossLine();
+    });
+    
+    pnlBullet = profitAndLossBullet();
+    
+    
     
   });
 }).call(this);
