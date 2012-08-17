@@ -12,6 +12,8 @@ class StockProfitAndLoss
   field :losses_average, :type => Float
   field :wins_percentage, :type => Float
   field :symbol, :type => String
+  field :comissions, :type => Float, :default => 0.0
+  field :net_profit_and_loss, :type => Float
   
   before_save :calculate_statistics
   
@@ -37,6 +39,14 @@ class StockProfitAndLoss
       :breakdown => { :wins => self.wins.round(2), :losses => self.losses.round(2) },
       :figure => self.profit_and_loss.round(2),
       :unit => '$' })
+      
+    res.push({
+      :title => 'net_profit_and_loss', 
+      :subtitle => '$', 
+      :breakdown => { :gross_profit_and_loss => self.profit_and_loss.round(2), :comissions => self.comissions.round(2) },
+      :figure => self.net_profit_and_loss.round(2),
+      :unit => '$' })
+    
     
     res.push({
       :title => "wins_percentage",

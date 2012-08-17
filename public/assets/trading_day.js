@@ -239,7 +239,7 @@ $(function(){
       
       function bindMeasuresHover(vis, data_array){
         vis.selectAll("rect").on("mouseover", function(d, i){
-          var str = ((d3.select(this.parentNode).property("data_index") != 1) ? d + "$" : d);
+          var str = ((d3.select(this.parentNode).property("data_index") != 2) ? d + "$" : d);
 
           d3.select(this).transition()
             .duration(250)
@@ -302,7 +302,7 @@ $(function(){
             $(".execution").not("." + $(this).text().toLowerCase().trim()).fadeOut(500); 
             $(".execution." + $(this).text().toLowerCase().trim() + ":hidden").fadeIn(500); 
           }
-          else{ 
+          else{
             $(".execution").fadeIn(500); 
           }
     

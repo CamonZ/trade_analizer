@@ -71,11 +71,11 @@ body{
         
           .bullet { font: 10px Helvetica, Arial, sans-serif; }
         
-          .bullet .measure.wins, .bullet .measure.average_wins, .bullet .measure.winning_trades{ 
+          .bullet .measure.wins, .bullet .measure.average_wins, .bullet .measure.winning_trades, .bullet .gross_profit_and_loss{ 
             fill: #216c2a; 
           }
         
-          .bullet .measure.losses, .bullet .measure.average_losses, .bullet .measure.loosing_trades { 
+          .bullet .measure.losses, .bullet .measure.average_losses, .bullet .measure.loosing_trades,  .bullet .comissions{ 
             fill: #C42303; 
           }
         

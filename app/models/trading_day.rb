@@ -14,6 +14,8 @@ class TradingDay
   field :winning_trades, :type => Integer, :default => 0
   field :loosing_trades, :type => Integer, :default => 0
   field :flat_trades, :type => Integer, :default => 0
+  field :comissions, :type => Float, :default => 0.0
+  field :net_profit_and_loss, :type => Float
   #(end)
   
   scope :by_date, order_by(:date => :desc)
@@ -74,7 +76,7 @@ class TradingDay
       end
       
       execution_fields[:time_of_day] = set_time_of_day(execution_fields[:execution_time])
-      
+      execution_fields[:comissions] = set_comission_costs(execution_fields[:shares])
       execs << execution_fields
     end
       
@@ -97,6 +99,13 @@ class TradingDay
       :subtitle => '$', 
       :breakdown => { :wins => self.wins.round(2), :losses => self.losses.round(2) },
       :figure => self.profit_and_loss.round(2),
+      :unit => '$' })
+    
+    res.push({
+      :title => 'net_profit_and_loss', 
+      :subtitle => '$', 
+      :breakdown => { :gross_profit_and_loss => self.profit_and_loss.round(2), :comissions => self.comissions.round(2) },
+      :figure => self.net_profit_and_loss.round(2),
       :unit => '$' })
     
     res.push({
@@ -181,6 +190,10 @@ class TradingDay
     res
   end
   
+  def set_comission_costs(shares)
+    ((shares <= 222) ? 1.0 : (shares.to_f * 0.0045)) * -1.0
+  end
+  
   def create_executions(execs)
     execs.each {|e| create_execution_from_hash(e) if e[:shares] > 0}
   end
@@ -224,10 +237,16 @@ class TradingDay
       end
 
       stock_pnl.executions << e
-
+      
+      self.comissions += e.comissions
+      stock_pnl.comissions += e.comissions
     end
-
-    stocks_profit_and_loss.each {|spnl| spnl.send(:calculate_statistics) }
-
+    
+    stocks_profit_and_loss.each do |spnl|
+      spnl.net_profit_and_loss = spnl.profit_and_loss + spnl.comissions
+      spnl.send(:calculate_statistics)
+    end
+    
+    self.net_profit_and_loss = self.profit_and_loss + self.comissions
   end
 end
