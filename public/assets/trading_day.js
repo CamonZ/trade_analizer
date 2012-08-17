@@ -102,7 +102,7 @@ $(function(){
                 .attr("height", height / 3)
                 .attr("x", reverse ? x1 : 0)
                 .attr("y", height / 3);
-      
+            
             // Compute the tick format.
             var format = tickFormat || x1.tickFormat(8);
       
@@ -348,7 +348,8 @@ $(function(){
             height = 400,
             timeFormat = d3.time.format("%H:%M:%S"),
             printTimeFormat = d3.time.format("%H:%M"),
-            duration = 500;
+            duration = 500,
+            tickFormat = null;
 
         
         var vis = d3.select('#line_chart')
@@ -365,7 +366,6 @@ $(function(){
           var firstExecutionTime = data[0].execution_time,
               lastExecutionTime = data[data.length - 1].execution_time;
           
-          
           pnl = 0.0;
           $(data).each(function(i){
             pnl += this.execution_profit_and_loss;
@@ -376,24 +376,29 @@ $(function(){
           var yScale = d3.scale.linear().domain([(min * 1.1), (max * 1.1)]).range([height, 0]);
           var xScale = d3.time.scale().domain([firstExecutionTime, lastExecutionTime]).range([0, width])
           
-          
           var paths = vis.selectAll("path");
           paths.remove();
           
+          var l = d3.svg.line()
+            .x(function(d, i) { return xScale(d.execution_time);})
+            .y(function(d, i){ return yScale(d.profit_and_loss);})
+            .interpolate('linear');
+          
+          
           paths = vis.selectAll("path").data([data]);
-          paths.enter().append("svg:path")
-            .attr("d", 
-              d3.svg.line()
-                .x(function(d, i) { return xScale(d.execution_time);})
-                .y(function(d, i){ return yScale(d.profit_and_loss);})
-                .interpolate('linear')
-            )
+          
+          var pathsEnter = paths.enter().append("svg:path")
+            .attr("d", l)
             .attr('class', 'pnl_line');
           
-          var ticks = vis.selectAll("g.tick_y")
-          ticks.remove();
+          vis.selectAll("g.tick_y").remove()
           
-          ticks = vis.selectAll("g.tick_y").data(yScale.ticks(6));
+          var format = tickFormat || yScale.tickFormat(6);
+          
+          var ticks = vis.selectAll("g.tick_y")
+            .data(yScale.ticks(6), function(d) {
+                  return (this.textContent || (format(d) + "$"));
+            });
           
           var ticksEnter = ticks.enter().append("svg:g")
             .attr('transform', function (d) { return "translate(0," + yScale(d)+")"; })
@@ -406,17 +411,34 @@ $(function(){
             .attr('x2', width);
           
           ticksEnter.append("svg:text")
-            .text(function(d){ return d + "$"; })
+            .text(format)
             .attr('text-anchor', 'end')
             .attr('dy', 2)
             .attr('dx', -4)
           
-            
-          ticks = vis.selectAll("g.tick_x");
-          ticks.remove();
+          var ticksUpdate = ticks
+            .transition()
+            .duration(duration)
+            .attr("transform", function (d) { return "translate(0," + yScale(d)+")"; })
+            .selectAll("text")
+              .text(format);
           
-          ticks = vis.selectAll("g.tick_x").data(xScale.ticks(15));
-
+          var ticksExit = ticks.exit()
+            .transition()
+            .duration(duration)
+            .attr("transform", function (d) { return "translate(0,0)"; })
+            .style("opacity", 1e-6)
+            .remove();
+          
+          
+          format = tickFormat || xScale.tickFormat(15);
+          
+          ticks = vis.selectAll("g.tick_x")
+            .data(xScale.ticks(10), function(d) { 
+                  return this.textContent || printTimeFormat(d);
+            });
+          
+          
           var ticksEnter = ticks.enter().append("svg:g")
             .attr('transform', function(d) { return "translate("+ xScale(d) + ", 0)"; })
             .attr('class', 'tick_x');
@@ -434,6 +456,22 @@ $(function(){
             .attr('dx', 13);
             
 
+          var ticksUpdate = ticks
+            .transition()
+            .duration(duration)
+            .attr("transform", function (d) { return "translate("+ xScale(d) +",0)"; })
+            .selectAll("text")
+              .text(format);
+          
+          var ticksExit = ticks.exit()
+            .transition()
+            .duration(duration)
+            .attr("transform", function (d) { return "translate(0,0)"; })
+            .style("opacity", 1e-6)
+            .remove();
+          
+          
+          
           var points = vis.selectAll(".point")
               .data(data);
               
@@ -448,12 +486,10 @@ $(function(){
             .on('click', function(d, i){ console.log (d, i)});
           
           var pointsUpdate = points.transition()
-            .duration(duration)
             .attr("cx", function(d, i){return xScale(d.execution_time); })
             .attr("cy", function(d, i){return yScale(d.profit_and_loss); });
             
           var pointsExit = points.exit().transition()
-            .duration(duration)
             .style("opacity", 1e-6)
             .remove();
         }
@@ -478,6 +514,12 @@ $(function(){
           
           data = buildDataFromHTML(opts)
           vis.call(chart); 
+        };
+        
+        line.tickFormat = function(x) {
+          if (!arguments.length) return tickFormat;
+          tickFormat = x;
+          return bullet;
         };
         
         function buildDataFromHTML(opts){
