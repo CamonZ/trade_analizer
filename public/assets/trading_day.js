@@ -454,8 +454,8 @@ $(function(){
             .attr('text-anchor', 'end')
             .attr('dy', height + 25)
             .attr('dx', 13);
-            
-
+          
+          
           var ticksUpdate = ticks
             .transition()
             .duration(duration)
@@ -470,25 +470,42 @@ $(function(){
             .style("opacity", 1e-6)
             .remove();
           
+          var points = vis.selectAll("g.point").data(data, function(d){ return d.id; });
           
-          
-          var points = vis.selectAll(".point")
-              .data(data);
-              
           var pointsEnter = points.enter()
-            .append("svg:circle")
-              .attr("class", function(d, i){return "point " + d.side; })
-              .attr("r", 4)
-              .attr("cx", function(d, i){return xScale(d.execution_time); })
-              .attr("cy", function(d, i){return yScale(d.profit_and_loss); })
-            .on('mouseover', function(){ d3.select(this).attr('r', 8);})
-            .on('mouseout',  function(){ d3.select(this).attr('r', 4);})
-            .on('click', function(d, i){ console.log (d, i)});
-          
-          var pointsUpdate = points.transition()
-            .attr("cx", function(d, i){return xScale(d.execution_time); })
-            .attr("cy", function(d, i){return yScale(d.profit_and_loss); });
+            .append("svg:g")
+            .attr("transform", function(d){return "translate("+xScale(d.execution_time)+","+yScale(d.profit_and_loss)+")"})
+            .attr('class', 'point');
             
+            pointsEnter.append("svg:circle")
+              .attr("class", function(d, i){return "point "+ d.side; })
+              .attr("r", 4)
+            .on('mouseover', function(){
+              $(this).parent().find("text").show();
+              d3.select(this).attr('r', 8);
+            })
+            .on('mouseout',  function(){
+              $(this).parent().find("text").hide();
+              d3.select(this).attr('r', 4);
+            });
+            
+            pointsEnter.append("text")
+              .attr('dx', -15)
+              .attr('dy', -5)
+              .attr('text-anchor', 'end')
+              .attr('class', 'execution_modal')
+              .text(function(d){
+                return printTimeFormat(d.execution_time) + " "
+                  + d.symbol.toUpperCase() + " $" + d.execution_profit_and_loss;
+              });
+          
+          var pointsUpdate = points;
+          
+          pointsUpdate.transition()
+            .duration(duration)
+            .attr("transform", function(d){return "translate("
+              + xScale(d.execution_time)+","+yScale(d.profit_and_loss)+")"});
+          
           var pointsExit = points.exit().transition()
             .style("opacity", 1e-6)
             .remove();
@@ -532,14 +549,15 @@ $(function(){
             if(opts.hasOwnProperty('time_of_day')) selector += "." + opts.time_of_day;
           }
           
-          
           $(selector).each(function(i){
             pnl += parseFloat($(this).find(".profit_and_loss").first().text().trim() || "0");
             d.push({
+              'id' : $(this).find(".execution_id").val(),
               'execution_time' : timeFormat.parse($(this).find(".execution_time").first().text().trim()),
               'execution_profit_and_loss' : parseFloat($(this).find(".profit_and_loss").first().text().trim() || "0"),
               'profit_and_loss' : pnl,
-              'side': $(this).find(".side").text().trim().toLowerCase()
+              'side': $(this).find(".side").text().trim().toLowerCase(),
+              'symbol': $(this).find(".symbol").text().trim().toLowerCase()
             });
           });
           return d;

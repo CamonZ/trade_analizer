@@ -9,6 +9,7 @@
           = spnl.symbol
     
     #line_chart
+      .execution_modal
       %h3
         Profit & Loss over Time
     %h2
@@ -25,8 +26,9 @@
           %th Liquidity
           %th P&L
       %tbody
-        - @trading_day.executions.each do |e|
+        - @trading_day.executions.each_with_index do |e, i|
           %tr{:class => "#{e.symbol.downcase} #{cycle('odd', 'even')} execution  #{e.time_of_day}"}
+            = hidden_field_tag "execution_#{i}", e.id, {:class=> 'execution_id'}
             %td.execution_time
               = e.execution_time.strftime("%H:%M:%S")
             %td.symbol

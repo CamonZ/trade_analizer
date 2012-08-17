@@ -97,8 +97,14 @@ body{
           margin-top: 3em;
           h3{
             text-align: center;
-            margin: 30px auto -10px auto;
+            margin: 20px auto -10px auto;
             color: $subtitle-color;
+          }
+          
+          text.execution_modal{
+            display: none;
+            font-size: 0.7em;
+            font-weight: 100;
           }
           .pnl_line{ 
             stroke-width: 2px;
