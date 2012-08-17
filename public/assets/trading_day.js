@@ -1,5 +1,4 @@
-(function(){
-  $(function(){
+$(function(){
     var pnlBullet = null,
         pnlLine = null;
     
@@ -113,47 +112,47 @@
                 .data(x1.ticks(8), function(d) {
                   return this.textContent || format(d);
                 });
-      
+            
             // Initialize the ticks with the old scale, x0.
             var tickEnter = tick.enter().append("svg:g")
                 .attr("class", "tick")
                 .attr("transform", bulletTranslate(x0))
                 .style("opacity", 1e-6);
-      
-      
+            
+            
             tickEnter.append("svg:line")
                 .attr("y1", height)
                 .attr("y2", height * 7 / 6);
-      
-
+            
+            
             tickEnter.append("svg:text")
                 .attr("text-anchor", "middle")
                 .attr("dy", "1em")
                 .attr("y", height * 7 / 6)
                 .text(format);
-      
-
+            
+            
             // Transition the entering ticks to the new scale, x1.
             tickEnter.transition()
                 .duration(duration)
                 .attr("transform", bulletTranslate(x1))
                 .style("opacity", 1);
-      
-
+            
+            
             // Transition the updating ticks to the new scale, x1.
             var tickUpdate = tick.transition()
                 .duration(duration)
                 .attr("transform", bulletTranslate(x1))
                 .style("opacity", 1);
-      
-
+            
+            
             tickUpdate.select("line")
                 .attr("y1", height)
                 .attr("y2", height * 7 / 6);
-
+            
             tickUpdate.select("text")
                 .attr("y", height * 7 / 6);
-      
+            
             // Transition the exiting ticks to the new scale, x1.
             tick.exit().transition()
                 .duration(duration)
@@ -325,11 +324,13 @@
         
             setTitleAndFigure(vis.select("g[transform]"));
             bindMeasuresHover(vis, data.statistics)
-            
+
             $("#bullet_chart").trigger("bullet_chart.symbol_changed")
           });
         });
       });
+    
+      return chart;
     }
     
     function profitAndLossLine(){
@@ -337,11 +338,18 @@
           height = 380,
           margin = {top: 15, right: 40, bottom: 20, left: 80};
       
+      var chart = lineChart()
+        .width(width - margin.right - margin.left)
+        .height(height - margin.top - margin.bottom);
+      
+      
       function lineChart(){
         var width = 960,
             height = 400,
             timeFormat = d3.time.format("%H:%M:%S"),
-            printTimeFormat = d3.time.format("%H:%M");
+            printTimeFormat = d3.time.format("%H:%M"),
+            duration = 500;
+
         
         var vis = d3.select('#line_chart')
                    .append('svg:svg')
@@ -354,8 +362,8 @@
           var pnl = 0.0, 
               max = 0.0, 
               min = 0.0;
-          var firstExecutionTime = timeFormat.parse($(".execution_time").first().text().trim()),
-              lastExecutionTime = timeFormat.parse($(".execution_time").last().text().trim());
+          var firstExecutionTime = data[0].execution_time,
+              lastExecutionTime = data[data.length - 1].execution_time;
           
           
           pnl = 0.0;
@@ -368,9 +376,12 @@
           var yScale = d3.scale.linear().domain([(min * 1.1), (max * 1.1)]).range([height, 0]);
           var xScale = d3.time.scale().domain([firstExecutionTime, lastExecutionTime]).range([0, width])
           
-          vis.selectAll("path.line")
-            .data([data])
-            .enter().append("svg:path")
+          
+          var paths = vis.selectAll("path");
+          paths.remove();
+          
+          paths = vis.selectAll("path").data([data]);
+          paths.enter().append("svg:path")
             .attr("d", 
               d3.svg.line()
                 .x(function(d, i) { return xScale(d.execution_time);})
@@ -379,47 +390,54 @@
             )
             .attr('class', 'pnl_line');
           
-          var ticks = vis.selectAll(".tick_y")
-            .data(yScale.ticks(6))
-            .enter().append("svg:g")
-            .attr('transform', function(d){ return "translate(0," + yScale(d)+" )"})
+          var ticks = vis.selectAll("g.tick_y")
+          ticks.remove();
+          
+          ticks = vis.selectAll("g.tick_y").data(yScale.ticks(6));
+          
+          var ticksEnter = ticks.enter().append("svg:g")
+            .attr('transform', function (d) { return "translate(0," + yScale(d)+")"; })
             .attr("class", "tick_y");
             
-          ticks.append("svg:line")
+          ticksEnter.append("svg:line")
             .attr('y1', 0)
             .attr('y2', 0)
             .attr('x1', 0)
             .attr('x2', width);
           
-          ticks.append("svg:text")
-            .text(function(d){return d + "$";})
+          ticksEnter.append("svg:text")
+            .text(function(d){ return d + "$"; })
             .attr('text-anchor', 'end')
             .attr('dy', 2)
             .attr('dx', -4)
           
-          xScale.tickFormat("%i:%m");
+            
+          ticks = vis.selectAll("g.tick_x");
+          ticks.remove();
           
-          ticks = vis.selectAll(".tick_x")
-            .data(xScale.ticks(15))
-            .enter().append("svg:g")
-            .attr('transform', function(d){ return "translate("+ xScale(d) + ", 0)"})
+          ticks = vis.selectAll("g.tick_x").data(xScale.ticks(15));
+
+          var ticksEnter = ticks.enter().append("svg:g")
+            .attr('transform', function(d) { return "translate("+ xScale(d) + ", 0)"; })
             .attr('class', 'tick_x');
             
-          ticks.append("svg:line")
+          ticksEnter.append("svg:line")
             .attr('y1', height + 15)
             .attr('y2', height + 5)
             .attr('x1', 0)
             .attr('x2', 0);
             
-          ticks.append("svg:text")
+          ticksEnter.append("svg:text")
             .text(function(d){return printTimeFormat(d);})
             .attr('text-anchor', 'end')
             .attr('dy', height + 25)
             .attr('dx', 13);
             
-          vis.selectAll(".point")
-            .data(data)
-            .enter()
+
+          var points = vis.selectAll(".point")
+              .data(data);
+              
+          var pointsEnter = points.enter()
             .append("svg:circle")
               .attr("class", function(d, i){return "point " + d.side; })
               .attr("r", 4)
@@ -428,6 +446,16 @@
             .on('mouseover', function(){ d3.select(this).attr('r', 8);})
             .on('mouseout',  function(){ d3.select(this).attr('r', 4);})
             .on('click', function(d, i){ console.log (d, i)});
+          
+          var pointsUpdate = points.transition()
+            .duration(duration)
+            .attr("cx", function(d, i){return xScale(d.execution_time); })
+            .attr("cy", function(d, i){return yScale(d.profit_and_loss); });
+            
+          var pointsExit = points.exit().transition()
+            .duration(duration)
+            .style("opacity", 1e-6)
+            .remove();
         }
         
         line.width = function(x) {
@@ -442,10 +470,28 @@
           return line;
         };
         
-        function buildDataFromHTML(){
-          var d = [];
-          pnl = 0.0;
-          $(".execution").each(function(i){
+        line.stockSelected = function(){
+          var symbol = $(".stocks").find(".pressed").text().trim().toLowerCase(),
+              opts = {};
+          
+          if(symbol != "") opts = {'symbol' : symbol};
+          
+          data = buildDataFromHTML(opts)
+          vis.call(chart); 
+        };
+        
+        function buildDataFromHTML(opts){
+          var d = [],
+              pnl = 0.0,
+              selector = ".execution";
+          
+          if(arguments.length){
+            if(opts.hasOwnProperty('symbol')) selector += "." + opts.symbol;
+            if(opts.hasOwnProperty('time_of_day')) selector += "." + opts.time_of_day;
+          }
+          
+          
+          $(selector).each(function(i){
             pnl += parseFloat($(this).find(".profit_and_loss").first().text().trim() || "0");
             d.push({
               'execution_time' : timeFormat.parse($(this).find(".execution_time").first().text().trim()),
@@ -462,23 +508,20 @@
         return line;
       }
       
-      var chart = lineChart()
-        .width(width - margin.right - margin.left)
-        .height(height - margin.top - margin.bottom).call(chart);
+      chart.call(chart);
+      
+      $("#bullet_chart").bind("bullet_chart.symbol_changed", function(e){
+        chart.stockSelected();
+      });
+      
+      return chart;
     }
     
     function stringify_key(k){
       return k.replace(/_/g, " ");
     }
     
-    
-    $("#bullet_chart").bind('bullet_chart.ready', function(){
-      pnlLine = profitAndLossLine();
-    });
+    $("#bullet_chart").bind('bullet_chart.ready', function(){ pnlLine = profitAndLossLine(); });
     
     pnlBullet = profitAndLossBullet();
-    
-    
-    
-  });
-}).call(this);
+});

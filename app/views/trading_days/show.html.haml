@@ -10,7 +10,7 @@
     
     #line_chart
       %h3
-        Profit & Loss Analisys
+        Profit & Loss over Time
     %h2
       Executions
     %table.executions
@@ -26,8 +26,8 @@
           %th P&L
       %tbody
         - @trading_day.executions.each do |e|
-          %tr{:class => "#{e.symbol.downcase} #{cycle('odd', 'even')} execution"}
-            %td{:class=>"execution_time #{e.time_of_day}"}
+          %tr{:class => "#{e.symbol.downcase} #{cycle('odd', 'even')} execution  #{e.time_of_day}"}
+            %td.execution_time
               = e.execution_time.strftime("%H:%M:%S")
             %td.symbol
               = e.symbol.upcase
