@@ -212,8 +212,8 @@ body{
             }
           }
         }
-          
         
+      
       }
       h2 { color: $subtitle-color; }
       
@@ -223,5 +223,9 @@ body{
     
     
   }
-  
+  .footer{
+    @include span-columns(12, 12);
+    padding: 30px 0px 10px 0px;
+    text-align: right;
+  }
 }
