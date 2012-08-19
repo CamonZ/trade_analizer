@@ -20,7 +20,7 @@ TradeAnalizer::Application.routes.draw do
   
   match 'trading_days/:date' => 'trading_days#show', :as => :trading_day_date, :constraints => { :date => /\d{4}-\d{2}-\d{2}/ }
   match 'trading_days/:date/statistics' => 'trading_days#statistics', :as => :trading_day_statistics, :constraints => { :date => /\d{4}-\d{2}-\d{2}/ }
-  match 'trading_days/:date/:symbol/statistics' => 'stocks_profit_and_losses#statistics', :as => :stocks_profit_and_losses_by_date_statistics, :constraints => { :date => /\d{4}-\d{2}-\d{2}/, :symbol => /\w{1,4}/ }
+  match 'trading_days/:date/:symbol/statistics' => 'profit_and_loss_statistics#statistics', :as => :stock_profit_and_losses_by_date_statistics, :constraints => { :date => /\d{4}-\d{2}-\d{2}/, :symbol => /\w{1,4}/ }
   
   resources :trading_days do
     collection do

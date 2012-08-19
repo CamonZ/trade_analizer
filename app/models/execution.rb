@@ -22,5 +22,4 @@ class Execution
   validates_numericality_of :shares, :only_integer => true, :greater_than => 0
 
   belongs_to :trading_day, :index => true
-  belongs_to :stock_profit_and_loss, :class_name => "StockProfitAndLoss", :index => true
 end

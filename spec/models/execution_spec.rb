@@ -24,5 +24,4 @@ describe Execution do
   it { should validate_numericality_of(:shares).to_allow(:only_integer => true, :greater_than => 0) }
   
   it {should belong_to :trading_day}
-  it {should belong_to :stock_profit_and_loss}
 end

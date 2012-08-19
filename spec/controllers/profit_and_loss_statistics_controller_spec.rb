@@ -1,5 +1,5 @@
 require 'spec_helper'
 
-describe StocksProfitAndLossesController do
+describe ProfitAndLossStatisticsController do
 
 end

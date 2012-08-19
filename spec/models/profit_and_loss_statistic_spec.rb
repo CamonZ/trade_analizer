@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe StockProfitAndLoss do
+describe ProfitAndLossStatistic do
   it { should have_field(:wins).of_type(Float).with_default_value_of(0.0) }
   it { should have_field(:losses).of_type(Float).with_default_value_of(0.0) }
   it { should have_field(:profit_and_loss).of_type(Float).with_default_value_of(0.0) }
@@ -10,14 +10,13 @@ describe StockProfitAndLoss do
   it { should have_field(:wins_average).of_type(Float) }
   it { should have_field(:losses_average).of_type(Float) }
   it { should have_field(:wins_percentage).of_type(Float) }
-  it { should have_field(:symbol).of_type(String) }
   
   it { should be_embedded_in(:trading_day) }
   it { should have_many(:executions) }
   
   describe "when calculating the stock statistics" do
     before do
-      @stock_profit_and_loss = StockProfitAndLoss.new(
+      @stock_profit_and_loss = ProfitAndLossStatistic.new(
         {
           :wins => 61.5, 
           :losses => -16.66, 

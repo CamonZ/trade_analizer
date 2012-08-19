@@ -5,7 +5,7 @@ describe TradingDay do
   should_respond_to :parse
   should_have_many :executions
   it{ should embed_many(:stocks_profit_and_loss) }
-  it { should have_index_for("stocks_profit_and_loss.symbol" => 1).with_options(unique: true) }
+  it { should have_index_for("profit_and_loss_statistics.symbol" => 1).with_options(unique: true) }
   
   should_validate_presence_of :date
   
@@ -182,10 +182,6 @@ describe TradingDay do
       
       it "an instance related executions should be accesible from the instance" do
         @trading_day.stocks_profit_and_loss.where(:symbol => "NKE").first.respond_to?(:executions).should == true
-      end
-      
-      it "an instance should have the right amount of executions" do
-        @trading_day.stocks_profit_and_loss.where(:symbol => "NKE").first.executions.size.should == 28
       end
       
       it "should calculate the wins_average for each stock " do

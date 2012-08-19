@@ -1,4 +1,4 @@
-class StockProfitAndLoss
+class ProfitAndLossStatistic
   include Mongoid::Document
   include Mongoid::Timestamps
   
@@ -11,7 +11,6 @@ class StockProfitAndLoss
   field :wins_average, :type => Float
   field :losses_average, :type => Float
   field :wins_percentage, :type => Float
-  field :symbol, :type => String
   field :comissions, :type => Float, :default => 0.0
   field :net_profit_and_loss, :type => Float
   

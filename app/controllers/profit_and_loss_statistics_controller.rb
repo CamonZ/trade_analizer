@@ -1,4 +1,4 @@
-class StocksProfitAndLossesController < ApplicationController
+class ProfitAndLossStatisticsController < ApplicationController
   respond_to :json
   def statistics
     resp = TradingDay.where(:date=>params[:date]).first.
