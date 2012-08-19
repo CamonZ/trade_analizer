@@ -299,11 +299,11 @@ $(function(){
     
           // fading the corresponding executions
           if($(this).hasClass("pressed")){
-            $(".execution").not("." + $(this).text().toLowerCase().trim()).fadeOut(500); 
-            $(".execution." + $(this).text().toLowerCase().trim() + ":hidden").fadeIn(500); 
+          //  $(".execution").not("." + $(this).text().toLowerCase().trim()).fadeOut(500); 
+           // $(".execution." + $(this).text().toLowerCase().trim() + ":hidden").fadeIn(500); 
           }
           else{
-            $(".execution").fadeIn(500); 
+            //$(".execution").fadeIn(500); 
           }
     
     
