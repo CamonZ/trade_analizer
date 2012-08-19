@@ -20,7 +20,7 @@ class TradingDay
   
   scope :by_date, order_by(:date => :desc)
   
-  has_many :executions
+  has_many :executions, :autosave => true
   embeds_many :stocks_statistics, :class_name => "ProfitAndLossStatistic"
   index({"profit_and_loss_statistics.symbol" => 1}, {:unique => true})
   
