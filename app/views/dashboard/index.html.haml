@@ -1,0 +1,16 @@
+.main
+  #upload
+    Please upload your trade executions file
+    = form_tag dashboard_upload_path, :multipart => true do
+      = file_field_tag :executions
+      %br
+      = submit_tag "Upload Executions"
+  .executions
+    %h2 Your Trading Days
+    - @dashboard.trading_days.each do |td|
+      %ul#trading_days
+        %li
+          = link_to(td.date.to_s, trading_day_date_path(td.date))
+    
+  
+    

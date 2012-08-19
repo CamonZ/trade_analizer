@@ -18,15 +18,6 @@ class TradingDaysController < ApplicationController
     respond_with(@trading_day)
   end
   
-  def upload
-    @trading_day = TradingDay.new
-    @trading_day.parse(params[:trading_day][:file].tempfile, params[:trading_day][:file].original_filename)
-    
-    respond_to do |format|
-      format.html { redirect_to root_path}
-    end
-  end
-  
   def statistics
     if params.has_key?(:date)
       @trading_day = TradingDay.where(:date=>params[:date]).first
