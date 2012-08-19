@@ -12,38 +12,39 @@
       .execution_modal
       %h3
         Profit & Loss over Time
-    %h2
-      Executions
-    %table.executions
-      %thead
-        %tr
-          %th Time
-          %th Symbol
-          %th Shares
-          %th Price
-          %th Side
-          %th Contra
-          %th Liquidity
-          %th P&L
-      %tbody
-        - @trading_day.executions.each_with_index do |e, i|
-          %tr{:class => "#{e.symbol.downcase} #{cycle('odd', 'even')} execution  #{e.time_of_day}"}
-            = hidden_field_tag "execution_#{i}", e.id, {:class=> 'execution_id'}
-            %td.execution_time
-              = e.execution_time.strftime("%H:%M:%S")
-            %td.symbol
-              = e.symbol.upcase
-            %td.shares
-              = e.shares
-            %td.price
-              = e.price
-            %td.side
-              = e.side
-            %td.contra
-              = e.contra
-            %td.liquidity
-              = e.liquidity
-            %td.profit_and_loss
-              -if e.profit_and_loss != 0.0
-                = e.profit_and_loss
+    .executions
+      %h2
+        Executions
+      %table.executions
+        %thead
+          %tr
+            %th Time
+            %th Symbol
+            %th Shares
+            %th Price
+            %th Side
+            %th Contra
+            %th Liquidity
+            %th P&L
+        %tbody
+          - @trading_day.executions.by_time.each_with_index do |e, i|
+            %tr{:class => "#{e.symbol.downcase} #{cycle('odd', 'even')} execution  #{e.time_of_day}"}
+              = hidden_field_tag "execution_#{i}", e.id, {:class=> 'execution_id'}
+              %td.execution_time
+                = e.execution_time.strftime("%H:%M:%S")
+              %td.symbol
+                = e.symbol.upcase
+              %td.shares
+                = e.shares
+              %td.price
+                = e.price
+              %td.side
+                = e.side
+              %td.contra
+                = e.contra
+              %td.liquidity
+                = e.liquidity
+              %td.profit_and_loss
+                -if e.profit_and_loss != 0.0
+                  = e.profit_and_loss
     

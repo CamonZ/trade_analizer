@@ -22,4 +22,6 @@ class Execution
   validates_numericality_of :shares, :only_integer => true, :greater_than => 0
 
   belongs_to :trading_day, :index => true
+  
+  scope :by_time, order_by(:execution_time => :asc)
 end
