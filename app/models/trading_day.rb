@@ -235,7 +235,7 @@ class TradingDay
         end
         stock_pnl.profit_and_loss = stock_pnl.wins + stock_pnl.losses
       end
-      
+      stock_pnl.executions_amount += 1
       self.comissions += e.comissions
       stock_pnl.comissions += e.comissions
     end
