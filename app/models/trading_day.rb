@@ -20,8 +20,8 @@ class TradingDay
   
   scope :by_date, order_by(:date => :desc)
   
-  has_many :executions, :autosave => true
-  embeds_many :stocks_profit_and_loss, :class_name => "ProfitAndLossStatistic"
+  has_many :executions
+  embeds_many :stocks_statistics, :class_name => "ProfitAndLossStatistic"
   index({"profit_and_loss_statistics.symbol" => 1}, {:unique => true})
   
   before_save :calculate_statistics, :on => :create
@@ -223,7 +223,7 @@ class TradingDay
     self.wins_percentage = ((winning_trades.to_f / (winning_trades + loosing_trades).to_f) * 100.0).round(2)
     
     executions.each do |e|
-      stock_pnl = stocks_profit_and_loss.find_or_initialize_by(:symbol => e.symbol)
+      stock_pnl = stocks_statistics.find_or_initialize_by(:symbol => e.symbol)
       
       if e.profit_and_loss != nil #calculate the pnl and stats for each execution that has a positive or negative pnl
         if e.profit_and_loss > 0.0
@@ -240,7 +240,7 @@ class TradingDay
       stock_pnl.comissions += e.comissions
     end
     
-    stocks_profit_and_loss.each do |spnl|
+    stocks_statistics.each do |spnl|
       spnl.net_profit_and_loss = spnl.profit_and_loss + spnl.comissions
       spnl.send(:calculate_statistics)
     end

@@ -4,7 +4,7 @@ require 'fileutils'
 describe TradingDay do
   should_respond_to :parse
   should_have_many :executions
-  it{ should embed_many(:stocks_profit_and_loss) }
+  it{ should embed_many(:stocks_statistics) }
   it { should have_index_for("profit_and_loss_statistics.symbol" => 1).with_options(unique: true) }
   
   should_validate_presence_of :date
@@ -165,35 +165,35 @@ describe TradingDay do
       end
       
       it "should have one instance per stock each traded" do
-        @trading_day.stocks_profit_and_loss.size.should == 4
+        @trading_day.stocks_statistics.size.should == 4
       end
       
       it "an instance should have the wins for the stock" do
-        @trading_day.stocks_profit_and_loss.where(:symbol => "NKE").first.wins.should == 61.5
+        @trading_day.stocks_statistics.where(:symbol => "NKE").first.wins.should == 61.5
       end
       
       it "an instance should have has the losses for the stock" do
-        @trading_day.stocks_profit_and_loss.where(:symbol => "NKE").first.losses.should == -16.66
+        @trading_day.stocks_statistics.where(:symbol => "NKE").first.losses.should == -16.66
       end
       
       it "an instance should have the profit_and_loss for the stock" do
-        @trading_day.stocks_profit_and_loss.where(:symbol => "NKE").first.profit_and_loss.should == 44.84
+        @trading_day.stocks_statistics.where(:symbol => "NKE").first.profit_and_loss.should == 44.84
       end
       
       it "an instance related executions should be accesible from the instance" do
-        @trading_day.stocks_profit_and_loss.where(:symbol => "NKE").first.respond_to?(:executions).should == true
+        @trading_day.stocks_statistics.where(:symbol => "NKE").first.respond_to?(:executions).should == true
       end
       
       it "should calculate the wins_average for each stock " do
-        @trading_day.stocks_profit_and_loss.where(:symbol => "NKE").first.wins_average.should == 7.688
+        @trading_day.stocks_statistics.where(:symbol => "NKE").first.wins_average.should == 7.688
       end
     
       it "should calculate the losses_average for each stock " do
-        @trading_day.stocks_profit_and_loss.where(:symbol => "NKE").first.losses_average.should == -3.332
+        @trading_day.stocks_statistics.where(:symbol => "NKE").first.losses_average.should == -3.332
       end
     
       it "should calculate the wins_percentage for each stock " do
-        @trading_day.stocks_profit_and_loss.where(:symbol => "NKE").first.wins_percentage.should == 61.538
+        @trading_day.stocks_statistics.where(:symbol => "NKE").first.wins_percentage.should == 61.538
       end
       
       

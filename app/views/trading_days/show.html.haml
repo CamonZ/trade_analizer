@@ -4,7 +4,7 @@
   #statistics
     #bullet_chart
     .stocks
-      - @trading_day.stocks_profit_and_loss.by_profit_and_loss.each do |spnl|
+      - @trading_day.stocks_statistics.by_profit_and_loss.each do |spnl|
         %div{:class => "button #{(spnl.profit_and_loss > 0 ? 'green' : 'red')}"}
           = spnl.symbol
     
