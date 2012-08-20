@@ -5,7 +5,7 @@
       = file_field_tag :executions
       %br
       = submit_tag "Upload Executions"
-  .executions
+  %div
     %h2 Your Trading Days
     - @dashboard.trading_days.each do |td|
       %ul#trading_days

@@ -21,6 +21,7 @@ class ProfitAndLossStatistic
   embedded_in :trading_day
   
   scope :by_profit_and_loss, order_by(:profit_and_loss => :asc)
+  scope :for_year, ->(year){ where(:year => year) }
   
   def statistics_to_json
     res = {:statistics => []}
@@ -69,7 +70,7 @@ class ProfitAndLossStatistic
   
   def calculate_statistics
     self.flat_trades = (self.executions_amount / 2) - (self.winning_trades + self.loosing_trades)
-    self.wins_average = winning_trades.eql?(0) ? 0.0 :(wins / winning_trades.to_f || 1.0).round(3)
+    self.wins_average = winning_trades.eql?(0) ? 0.0 : (wins / winning_trades.to_f || 1.0).round(3)
     self.losses_average = loosing_trades.eql?(0) ? 0.0 : (losses / loosing_trades.to_f).round(3)
     self.wins_percentage = ((winning_trades.to_f / (winning_trades + loosing_trades).to_f) * 100.0).round(3)
   end
