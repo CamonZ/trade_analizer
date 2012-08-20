@@ -11,3 +11,9 @@
 // GO AFTER THE REQUIRES BELOW.
 //
 //= require_tree .
+
+
+function stringify_key(k){
+  return k.replace(/_/g, " ");
+}
+
