@@ -21,6 +21,8 @@ class ProfitAndLossStatistic
   
   scope :by_profit_and_loss, order_by(:profit_and_loss => :asc)
   scope :weekly, where(:timespan => :cweek).order_by(:cweek => :desc)
+  scope :monthly, where(:timespan => :month).order_by(:month => :desc)
+  scope :yearly, where(:timespan => :year).order_by(:year => :desc)
   scope :for_year, ->(year){ where(:year => year) }
   
   def statistics_to_json
