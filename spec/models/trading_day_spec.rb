@@ -122,39 +122,46 @@ describe TradingDay do
     end
   end
 
-  describe "when calculating the statistics of the executions day" do
+  describe "when calculating the statistics of the trading day" do
     before do
       @trading_day = TradingDay.new
       @executions_file = File.open(File.join(::Rails.root, 'spec', 'factories', "OrdersTest 2012-07-14.txt"))
+      
     end
       
     it "should calculate the daily pnl" do
       @trading_day.parse(@executions_file, "Orders 2012-07-14.txt")
+      @trading_day.save
       @trading_day.profit_and_loss.should == 22.35
     end
       
     it "should calculate the winnings for the day" do
       @trading_day.parse(@executions_file, "Orders 2012-07-14.txt")
+      @trading_day.save
       @trading_day.wins.should == 27.0
     end
       
     it "should calculate the losses for the day" do
       @trading_day.parse(@executions_file, "Orders 2012-07-14.txt")
+      @trading_day.save
       @trading_day.losses.should == -4.65
     end
       
     it "should calculate the winning average for the day" do
       @trading_day.parse(@executions_file, "Orders 2012-07-14.txt")
+      @trading_day.save
       @trading_day.wins_average.should == 9
     end
       
     it "should calculate the losses average for the day" do
       @trading_day.parse(@executions_file, "Orders 2012-07-14.txt")
+      @trading_day.save
       @trading_day.losses_average.should == -4.65
     end
       
     it "should calculate the win percentage rate" do
       @trading_day.parse(@executions_file, "Orders 2012-07-14.txt")
+      @trading_day.save
       @trading_day.wins_percentage.should == 75.0
     end
       
@@ -162,6 +169,7 @@ describe TradingDay do
       before do
         @executions_file = File.open(File.join(::Rails.root, 'spec', 'factories', "Orders 2012-07-02.txt"))
         @trading_day.parse(@executions_file, "Orders 2012-07-02.txt")
+        @trading_day.save
       end
       
       it "should have one instance per stock each traded" do
@@ -185,15 +193,15 @@ describe TradingDay do
       end
       
       it "should calculate the wins_average for each stock " do
-        @trading_day.stocks_statistics.where(:symbol => "NKE").first.wins_average.should == 7.688
+        @trading_day.stocks_statistics.where(:symbol => "NKE").first.wins_average.should == 7.69
       end
     
       it "should calculate the losses_average for each stock " do
-        @trading_day.stocks_statistics.where(:symbol => "NKE").first.losses_average.should == -3.332
+        @trading_day.stocks_statistics.where(:symbol => "NKE").first.losses_average.should == -3.33
       end
     
       it "should calculate the wins_percentage for each stock " do
-        @trading_day.stocks_statistics.where(:symbol => "NKE").first.wins_percentage.should == 61.538
+        @trading_day.stocks_statistics.where(:symbol => "NKE").first.wins_percentage.should == 61.54
       end
       
       

@@ -28,15 +28,15 @@ describe ProfitAndLossStatistic do
     end
 
     it "should calculate the wins_average" do
-      @stock_profit_and_loss.wins_average.should == 7.688
+      @stock_profit_and_loss.wins_average.should == 7.69
     end
     
     it "should calculate the losses_average" do
-      @stock_profit_and_loss.losses_average.should == -3.332
+      @stock_profit_and_loss.losses_average.should == -3.33
     end
     
     it "should calculate the wins_percentage" do
-      @stock_profit_and_loss.wins_percentage.should == 61.538
+      @stock_profit_and_loss.wins_percentage.should == 61.54
     end
   end
 end
