@@ -21,6 +21,7 @@ class ProfitAndLossStatistic
   embedded_in :trading_day
   
   scope :by_profit_and_loss, order_by(:profit_and_loss => :asc)
+  scope :weekly, where(:timespan => :cweek).order_by(:cweek => :desc)
   scope :for_year, ->(year){ where(:year => year) }
   
   def statistics_to_json

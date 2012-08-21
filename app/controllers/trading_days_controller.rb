@@ -19,11 +19,8 @@ class TradingDaysController < ApplicationController
   end
   
   def statistics
-    if params.has_key?(:date)
-      @trading_day = TradingDay.where(:date=>params[:date]).first
-    else
-      @trading_day = TradingDay.find(params[:id])
-    end
+    @trading_day = params.has_key?(:date) ? TradingDay.where(:date=>params[:date]).first 
+                                          : TradingDay.find(params[:id]).first
     
     resp = @trading_day.statistics_to_json()
     

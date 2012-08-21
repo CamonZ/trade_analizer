@@ -1,5 +1,3 @@
-- content_for :head do
-  = javascript_include_tag "trading_day"
 .main
   #statistics
     #bullet_chart
@@ -48,3 +46,4 @@
                 -if e.profit_and_loss != 0.0
                   = e.profit_and_loss
     
+= javascript_include_tag "trading_day"

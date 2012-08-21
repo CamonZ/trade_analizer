@@ -40,6 +40,7 @@ class Dashboard
       statistic[:year] = trading_day.date.year 
     end
     
+    
     statistic.wins += trading_day.wins
     statistic.losses += trading_day.losses
     statistic.winning_trades += trading_day.winning_trades
@@ -47,6 +48,7 @@ class Dashboard
     statistic.profit_and_loss += trading_day.profit_and_loss
     statistic.comissions += trading_day.comissions
     statistic.net_profit_and_loss = statistic.profit_and_loss + statistic.comissions
+    statistic.executions_amount = trading_day.executions.size
     
     if(statistic.new_record?)
       profit_and_loss_statistics << statistic

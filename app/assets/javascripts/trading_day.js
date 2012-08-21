@@ -1,3 +1,6 @@
+//= require profit_and_loss_bullet
+//= require profit_and_loss_line
+
 $(function(){
     var pnlBullet = null,
         pnlLine = null;
@@ -36,5 +39,4 @@ $(function(){
         });
       });
     });
-    
 });

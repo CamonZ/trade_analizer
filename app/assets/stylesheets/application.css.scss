@@ -56,41 +56,43 @@ body{
       padding-top: 10px; 
       font-size: 1em;
       
+      #bullet_chart{
+        @include span-columns(10,12);
+        display:block;
+        float: none;
+        
+        .bullet { font: 10px Helvetica, Arial, sans-serif; }
+        
+        .bullet .measure.wins, .bullet .measure.average_wins, .bullet .measure.winning_trades, .bullet .gross_profit_and_loss{ 
+          fill: #216c2a; 
+        }
+        
+        .bullet .measure.losses, .bullet .measure.average_losses, .bullet .measure.loosing_trades,  .bullet .comissions{ 
+          fill: #C42303; 
+        }
+        
+        .bullet .flat_trades { fill: #404040;}
+        .bullet .title { font-size: 1.4em; font-weight: bold; text-transform:capitalize;}
+        .bullet .figure { font-size: 1.7em; font-weight: lighter; }
+        .bullet .unit { font-size: 1.7em; font-weight: lighter; fill: #808080; }
+        .bullet .subtitle { fill: #808080; }
+          
+        p{ display: inline; }
+        p.figures{
+          margin: 0px 0px 15px 10px;
+          font-size: 1.75em;
+          color: $title-color;
+        }
+      }
+      
+      
+      
       #statistics{
         @include span-columns(12, 12);
         
         h2 {
           font-size: 1.5em;
           color: $title-color;
-        }
-        
-        #bullet_chart{
-          @include span-columns(10,12);
-          display:block;
-          float: none;
-        
-          .bullet { font: 10px Helvetica, Arial, sans-serif; }
-        
-          .bullet .measure.wins, .bullet .measure.average_wins, .bullet .measure.winning_trades, .bullet .gross_profit_and_loss{ 
-            fill: #216c2a; 
-          }
-        
-          .bullet .measure.losses, .bullet .measure.average_losses, .bullet .measure.loosing_trades,  .bullet .comissions{ 
-            fill: #C42303; 
-          }
-        
-          .bullet .flat_trades { fill: #404040;}
-          .bullet .title { font-size: 1.4em; font-weight: bold; text-transform:capitalize;}
-          .bullet .figure { font-size: 1.7em; font-weight: lighter; }
-          .bullet .unit { font-size: 1.7em; font-weight: lighter; fill: #808080; }
-          .bullet .subtitle { fill: #808080; }
-          
-          p{ display: inline; }
-          p.figures{
-            margin: 0px 0px 15px 10px;
-            font-size: 1.75em;
-            color: $title-color;
-          }
         }
         
         #line_chart{

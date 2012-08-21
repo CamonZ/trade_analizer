@@ -1,6 +1,6 @@
 function profitAndLossLine(){
   var width = 960,
-      height = 380,
+      height = 280,
       margin = {top: 15, right: 40, bottom: 20, left: 80};
       
   var chart = lineChart()
@@ -10,7 +10,7 @@ function profitAndLossLine(){
       
   function lineChart(){
     var width = 960,
-        height = 400,
+        height = 300,
         timeFormat = d3.time.format("%H:%M:%S"),
         printTimeFormat = d3.time.format("%H:%M"),
         duration = 500,

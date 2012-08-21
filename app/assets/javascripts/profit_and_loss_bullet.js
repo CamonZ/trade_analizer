@@ -1,15 +1,25 @@
-function profitAndLossBullet(){
+function profitAndLossBullet(options){
   var width = 960,
       height = 60,
-      margin = {top: 15, right: 40, bottom: 20, left: 80};
+      margin = {top: 15, right: 40, bottom: 20, left: 80},
+      url,
+      options = typeof(options) !== 'undefined' ? options : {};
 
+  
   var chart = bulletChart();
       
   chart.width(width - margin.right - margin.left)
       .height(height - margin.top - margin.bottom);
-      
-      
-  d3.json(window.location + "/statistics.json", function(data) {
+  
+  if(options.hasOwnProperty('url')){
+    url = window.location + options.url;
+  }
+  else{
+    url = window.location;
+    url += ((url.pathname == "/") ? 'statistics.json' : '/statistics.json')
+  } 
+
+  d3.json(url, function(data) {
     var vis = d3.select("#bullet_chart").selectAll("svg")
         .data(data.statistics)
       .enter().append("svg")

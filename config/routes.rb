@@ -23,6 +23,7 @@ TradeAnalizer::Application.routes.draw do
   match 'trading_days/:date/:symbol/statistics' => 'profit_and_loss_statistics#statistics', :as => :stock_profit_and_losses_by_date_statistics, :constraints => { :date => /\d{4}-\d{2}-\d{2}/, :symbol => /\w{1,4}/ }
   
   match '/dashboard/upload' => 'dashboard#upload', :as => :dashboard_upload, :method => :post
+  match '/dashboard/statistics' => 'dashboard#statistics', :as => :dashboard_statistics
   match '/dashboard' => 'dashboard#index', :as => :dashboard_index
   
   
