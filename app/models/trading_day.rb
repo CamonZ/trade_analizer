@@ -240,7 +240,8 @@ class TradingDay
     self.wins_average = (winning_trades == 0 ? 0 : (wins / winning_trades.to_f)).round(2)
     self.losses_average = (loosing_trades == 0 ? 0 : (losses / loosing_trades.to_f)).round(2)
     
-    self.wins_percentage = ((winning_trades.to_f / (winning_trades + loosing_trades).to_f) * 100.0).round(2)
+    self.wins_percentage = (winning_trades + loosing_trades == 0) ? 0 
+      : ((winning_trades.to_f / ((winning_trades + loosing_trades).to_f)) * 100.0).round(2)
   end
   
   def calculate_trade_types(execs)
