@@ -13,7 +13,6 @@ class TradingDay
   field :wins_percentage, :type => Float
   field :winning_trades, :type => Integer, :default => 0
   field :loosing_trades, :type => Integer, :default => 0
-  field :flat_trades, :type => Integer, :default => 0
   field :comissions, :type => Float, :default => 0.0
   field :net_profit_and_loss, :type => Float
   #(end)
@@ -111,8 +110,8 @@ class TradingDay
     res.push({
       :title => "wins_percentage",
       :subtitle => "%",
-      :breakdown => { :winning_trades => self.winning_trades, :loosing_trades => self.loosing_trades, :flat_trades => self.flat_trades }, 
-      :figure => ((self.winning_trades.to_f / (self.loosing_trades.to_f + self.winning_trades.to_f + self.flat_trades.to_f))*100.0).round(2), 
+      :breakdown => { :winning_trades => self.winning_trades, :loosing_trades => self.loosing_trades }, 
+      :figure => self.wins_percentage, 
       :unit => "%"
     })
     
@@ -206,21 +205,9 @@ class TradingDay
   def calculate_statistics
     execs = executions.select {|e| e.profit_and_loss != nil }
 
-    self.profit_and_loss = execs.inject(0.0) {|sum, e| sum + (e.profit_and_loss || 0.0) }
-    self.wins = execs.select {|e| e.profit_and_loss > 0.0}.inject(0.0) {|sum, e| sum + e.profit_and_loss }
-    self.losses = execs.select {|e| e.profit_and_loss  < 0.0}.inject(0.0) {|sum, e| sum + e.profit_and_loss }
-    
-    self.winning_trades = execs.select {|e| e.profit_and_loss > 0.0}.size
-    self.loosing_trades = execs.select {|e| e.profit_and_loss < 0.0}.size
-    self.flat_trades = (executions.size / 2) - (winning_trades + loosing_trades)
-    
-    self.wins_average = (winning_trades == 0 ? 0 : (wins / winning_trades.to_f))
-    self.wins_average = self.wins_average.round(2)
-    
-    self.losses_average = (loosing_trades == 0 ? 0 : (losses / loosing_trades.to_f))
-    self.losses_average = self.losses_average.round(2)
-    
-    self.wins_percentage = ((winning_trades.to_f / (winning_trades + loosing_trades).to_f) * 100.0).round(2)
+    calculate_wins_and_losses_amount(execs)
+    calculate_trade_types(execs)
+    calculate_averages_and_win_percentage
     
     executions.each do |e|
       stock_pnl = stocks_statistics.find_or_initialize_by(:symbol => e.symbol)
@@ -248,4 +235,23 @@ class TradingDay
     
     self.net_profit_and_loss = self.profit_and_loss + self.comissions
   end
+  
+  def calculate_averages_and_win_percentage
+    self.wins_average = (winning_trades == 0 ? 0 : (wins / winning_trades.to_f)).round(2)
+    self.losses_average = (loosing_trades == 0 ? 0 : (losses / loosing_trades.to_f)).round(2)
+    
+    self.wins_percentage = ((winning_trades.to_f / (winning_trades + loosing_trades).to_f) * 100.0).round(2)
+  end
+  
+  def calculate_trade_types(execs)
+    self.winning_trades = execs.select {|e| e.profit_and_loss > 0.0}.size
+    self.loosing_trades = execs.select {|e| e.profit_and_loss < 0.0}.size
+  end
+  
+  def calculate_wins_and_losses_amount(execs)
+    self.profit_and_loss = execs.inject(0.0) {|sum, e| sum + (e.profit_and_loss || 0.0) }
+    self.wins = execs.select {|e| e.profit_and_loss > 0.0}.inject(0.0) {|sum, e| sum + e.profit_and_loss }
+    self.losses = execs.select {|e| e.profit_and_loss  < 0.0}.inject(0.0) {|sum, e| sum + e.profit_and_loss }
+  end
 end
+
